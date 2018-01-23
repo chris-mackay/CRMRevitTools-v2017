@@ -1,0 +1,7 @@
+C:\Users\CMackay\Documents\Visual Studio 2017\Projects\SharedParameterCreatorCS\SharedParameterCreator\SharedParameterCreator\bin\x64\Debug\SharedParameterCreator.dll
+C:\Users\CMackay\Documents\Visual Studio 2017\Projects\SharedParameterCreatorCS\SharedParameterCreator\SharedParameterCreator\bin\x64\Debug\SharedParameterCreator.pdb
+C:\Users\CMackay\Documents\Visual Studio 2017\Projects\SharedParameterCreatorCS\SharedParameterCreator\SharedParameterCreator\bin\x64\Debug\RevitAPI.dll
+C:\Users\CMackay\Documents\Visual Studio 2017\Projects\SharedParameterCreatorCS\SharedParameterCreator\SharedParameterCreator\bin\x64\Debug\RevitAPIUI.dll
+C:\Users\CMackay\Documents\Visual Studio 2017\Projects\SharedParameterCreatorCS\SharedParameterCreator\SharedParameterCreator\obj\x64\Debug\SharedParameterCreator.csprojResolveAssemblyReference.cache
+C:\Users\CMackay\Documents\Visual Studio 2017\Projects\SharedParameterCreatorCS\SharedParameterCreator\SharedParameterCreator\obj\x64\Debug\SharedParameterCreator.dll
+C:\Users\CMackay\Documents\Visual Studio 2017\Projects\SharedParameterCreatorCS\SharedParameterCreator\SharedParameterCreator\obj\x64\Debug\SharedParameterCreator.pdb
