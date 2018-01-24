@@ -71,13 +71,12 @@ namespace CRMTools
             btnSharedParameterCreator.ToolTip = "Create a Shared Parameter file from a CSV (Comma delimited) (.csv) file list";
             btnSharedParameterCreator.LongDescription = "Create large numbers of Shared Parameters. To use this program, first a file with the .csv extension must be created, which can be stored anywhere. " +
                                                         "CSV files can be created with Microsoft Excel.\n\n" +
-                                                        "Column A: Bind Parameter (Enter any character if you want this parameter to be inserted into Project Parameters. e.g. *)\n" + 
-                                                        "Column B: Category (e.g. Mechanical Equipment)\n" +
-                                                        "Column C: Group Under (e.g. Group found in Properties window)\n" +
-                                                        "Column D: Shared Parameter Group\n" +
-                                                        "Column E: Data Type (e.g. Number, Integer, Text, YesNo)\n" +
-                                                        "Column F: Binding Type (e.g. Instance, Type)\n" +
-                                                        "Column G: Parameter Name";
+                                                        "Column A: Category (e.g. Mechanical Equipment)\n" +
+                                                        "Column B: Shared Parameter Group (User Determined)\n" +
+                                                        "Column C: Data Type (e.g. Number, Integer, Text, YesNo)\n" +
+                                                        "Column D: Binding Type (e.g. Instance, Type)\n" +
+                                                        "Column E: Parameter Name (User Determined)\n\n" +
+                                                        "Parameters are grouped under Data in Properties";
 
             // create bitmap image for button
             Uri uriLargeImage_SharedParameterCreator = new Uri(iconsPath + @"32x32\cmdSharedParameterCreator_32x32.bmp");

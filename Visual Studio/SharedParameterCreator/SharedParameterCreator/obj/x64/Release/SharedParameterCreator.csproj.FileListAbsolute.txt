@@ -38,3 +38,13 @@ C:\Users\CMackay\Documents\Visual Studio 2017\Projects\CRMRevitTools-v2017\Share
 C:\Users\CMackay\Documents\Visual Studio 2017\Projects\CRMRevitTools-v2017\SharedParameterCreator\SharedParameterCreator\obj\x64\Release\SharedParameterCreator.csproj.CoreCompileInputs.cache
 C:\Users\CMackay\Documents\Visual Studio 2017\Projects\CRMRevitTools-v2017\SharedParameterCreator\SharedParameterCreator\obj\x64\Release\SharedParameterCreator.dll
 C:\Users\CMackay\Documents\Visual Studio 2017\Projects\CRMRevitTools-v2017\SharedParameterCreator\SharedParameterCreator\obj\x64\Release\SharedParameterCreator.pdb
+C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\SharedParameterCreator\SharedParameterCreator\bin\x64\Release\SharedParameterCreator.dll
+C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\SharedParameterCreator\SharedParameterCreator\bin\x64\Release\SharedParameterCreator.pdb
+C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\SharedParameterCreator\SharedParameterCreator\bin\x64\Release\RevitAPI.dll
+C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\SharedParameterCreator\SharedParameterCreator\bin\x64\Release\RevitAPIUI.dll
+C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\SharedParameterCreator\SharedParameterCreator\obj\x64\Release\SharedParameterCreator.csprojResolveAssemblyReference.cache
+C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\SharedParameterCreator\SharedParameterCreator\obj\x64\Release\SharedParameterCreator.MainForm.resources
+C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\SharedParameterCreator\SharedParameterCreator\obj\x64\Release\SharedParameterCreator.csproj.GenerateResource.Cache
+C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\SharedParameterCreator\SharedParameterCreator\obj\x64\Release\SharedParameterCreator.csproj.CoreCompileInputs.cache
+C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\SharedParameterCreator\SharedParameterCreator\obj\x64\Release\SharedParameterCreator.dll
+C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\SharedParameterCreator\SharedParameterCreator\obj\x64\Release\SharedParameterCreator.pdb

@@ -141,17 +141,13 @@ namespace SharedParameterCreator
 
                         foreach (string param in parameterCollection)
                         {
-                            // A, bindParameter, INSERT INTO PROJECT PARAMETERS OF CURRENT REVIT DOCUMENT
-                            // B, appliesTo, CATEGORY
-                            // C, groupUnder, GROUP UNDER
-                            // D, sharedParameterGroup, SHARED PARAMETER GROUP
-                            // E, parameterDataType, DATA TYPE
-                            // F, bindType, BINDING TYPE
-                            // G, PARAMETER NAME
+                            // A, appliesTo, CATEGORY
+                            // B, sharedParameterGroup, SHARED PARAMETER GROUP
+                            // C, parameterDataType, DATA TYPE
+                            // D, bindType, BINDING TYPE
+                            // E, PARAMETER NAME
 
-                            string bindParameter = string.Empty;
                             string appliesTo = string.Empty;
-                            string groupUnder = string.Empty;
                             string sharedParameterGroup = string.Empty;
                             ParameterType parameterDataType;
                             string parameterDataType_Test = string.Empty;
@@ -161,13 +157,11 @@ namespace SharedParameterCreator
                             char[] chrSeparator = new char[] { ',' };
                             string[] arrValues = param.Split(chrSeparator, StringSplitOptions.None);
 
-                            bindParameter = arrValues[0];
-                            appliesTo = arrValues[1];
-                            groupUnder = arrValues[2];
-                            sharedParameterGroup = arrValues[3];
-                            parameterDataType_Test = arrValues[4];
-                            bindType = arrValues[5];
-                            parameterName = arrValues[6];
+                            appliesTo = arrValues[0];
+                            sharedParameterGroup = arrValues[1];
+                            parameterDataType_Test = arrValues[2];
+                            bindType = arrValues[3];
+                            parameterName = arrValues[4];
 
                             if (parameterDataType_Test == "Number")
                             {
@@ -204,21 +198,17 @@ namespace SharedParameterCreator
                                 definition = OpenDefinition(sharedParameterDefinition, parameterName, parameterDataType);
                             }
 
-                            if (insertIntoProjectParameters) 
+                            if (insertIntoProjectParameters)
                             {
-                                if (bindParameter != null)
+                                if (bindType == "Type")
                                 {
-                                    if (bindType == "Type")
-                                    {
-                                        bindingMap.Insert(definition, typeBinding, BuiltInParameterGroup.PG_DATA);
-                                    }
-                                    else
-                                    {
-                                        bindingMap.Insert(definition, instanceBinding, BuiltInParameterGroup.PG_DATA);
-                                    }
+                                    bindingMap.Insert(definition, typeBinding, BuiltInParameterGroup.PG_DATA);
+                                }
+                                else
+                                {
+                                    bindingMap.Insert(definition, instanceBinding, BuiltInParameterGroup.PG_DATA);
                                 }
                             }
-
                         }
 
                         //END REVIT TRANSACTION
