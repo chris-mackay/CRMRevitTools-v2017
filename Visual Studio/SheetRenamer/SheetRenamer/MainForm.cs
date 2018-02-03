@@ -19,6 +19,7 @@ using System.IO;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SheetRenamer
 {
@@ -64,7 +65,7 @@ namespace SheetRenamer
         private void btnBrowse_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog fldrBrowser = new FolderBrowserDialog();
-            fldrBrowser.Description = "Select the directory where the drawings you want to rename are located";
+            fldrBrowser.Description = "Select the directory where the sheets you want to rename are located";
 
             //GET DIRECTORY WHERE THE DRAWINGS ARE SAVED
             if (fldrBrowser.ShowDialog() == DialogResult.OK)
@@ -181,6 +182,27 @@ namespace SheetRenamer
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void MainForm_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+            string helpFile = string.Empty;
+            helpFile = @"C:\Users\" + Environment.UserName + @"\Documents\CRMRevitTools\v2017\CRMRevitTools_Help\sheet_renamer.html";
+
+            if (File.Exists(helpFile))
+            {
+                Process.Start(helpFile);
+            }
+            else
+            {
+                TaskDialog taskDialog = new TaskDialog("Sheet Renamer");
+
+                taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconNone;
+                taskDialog.MainInstruction = "The Help file for Sheet Renamer could not be found. It may have been moved or deleted.";
+                taskDialog.Show();
+            }
+
         }
     }
 }

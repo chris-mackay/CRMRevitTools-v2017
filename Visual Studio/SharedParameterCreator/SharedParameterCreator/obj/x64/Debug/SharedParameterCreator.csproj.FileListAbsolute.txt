@@ -5,3 +5,10 @@ C:\Users\CMackay\Documents\Visual Studio 2017\Projects\SharedParameterCreatorCS\
 C:\Users\CMackay\Documents\Visual Studio 2017\Projects\SharedParameterCreatorCS\SharedParameterCreator\SharedParameterCreator\obj\x64\Debug\SharedParameterCreator.csprojResolveAssemblyReference.cache
 C:\Users\CMackay\Documents\Visual Studio 2017\Projects\SharedParameterCreatorCS\SharedParameterCreator\SharedParameterCreator\obj\x64\Debug\SharedParameterCreator.dll
 C:\Users\CMackay\Documents\Visual Studio 2017\Projects\SharedParameterCreatorCS\SharedParameterCreator\SharedParameterCreator\obj\x64\Debug\SharedParameterCreator.pdb
+C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\SharedParameterCreator\SharedParameterCreator\bin\x64\Debug\SharedParameterCreator.dll
+C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\SharedParameterCreator\SharedParameterCreator\bin\x64\Debug\SharedParameterCreator.pdb
+C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\SharedParameterCreator\SharedParameterCreator\obj\x64\Debug\SharedParameterCreator.MainForm.resources
+C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\SharedParameterCreator\SharedParameterCreator\obj\x64\Debug\SharedParameterCreator.csproj.GenerateResource.Cache
+C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\SharedParameterCreator\SharedParameterCreator\obj\x64\Debug\SharedParameterCreator.csproj.CoreCompileInputs.cache
+C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\SharedParameterCreator\SharedParameterCreator\obj\x64\Debug\SharedParameterCreator.dll
+C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\SharedParameterCreator\SharedParameterCreator\obj\x64\Debug\SharedParameterCreator.pdb

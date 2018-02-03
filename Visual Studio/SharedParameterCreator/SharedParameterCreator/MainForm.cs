@@ -16,6 +16,7 @@
 using System;
 using System.Windows.Forms;
 using System.IO;
+using System.Diagnostics;
 
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -30,9 +31,12 @@ namespace SharedParameterCreator
         Document myRevitDoc;
 
         public string fullFile_Excel = string.Empty;
-        public string fullFile_Parameters = string.Empty;        
+        public string fullFile_Parameters = string.Empty;
         public ExternalCommandData myCommandData = null;
-        public bool insertIntoProjectParameters = false; 
+        public bool insertIntoProjectParameters = false;
+
+        public string workingDirectory = string.Empty;
+        public string revitVersion = string.Empty;
 
         #endregion
 
@@ -48,6 +52,8 @@ namespace SharedParameterCreator
             myRevitDoc = myRevitUIApp.ActiveUIDocument.Document;
             myCommandData = Class1.m_commandData;
 
+            revitVersion = "v2017";
+
         }
 
         private void btnBrowse_Click(object sender, EventArgs e)
@@ -55,8 +61,16 @@ namespace SharedParameterCreator
             OpenFileDialog ofd = new OpenFileDialog();
 
             string libraryPath = string.Empty;
-            libraryPath = "c:\\"; //DEFAULT PATH
-            ofd.InitialDirectory = libraryPath;
+            libraryPath = workingDirectory; //DEFAULT PATH
+
+            if (Directory.Exists(workingDirectory))
+            {
+                ofd.InitialDirectory = libraryPath;
+            }
+            else
+            {
+                ofd.InitialDirectory = "c:\\";
+            }
 
             ofd.Filter = "CSV (Comma delimited) (.csv) Files (*.csv)|*.csv";
 
@@ -66,7 +80,7 @@ namespace SharedParameterCreator
                 string fileName = string.Empty;
                 fileName = ofd.FileName;
                 txtCSVFile.Text = fileName;
-                
+
             }
         }
 
@@ -81,8 +95,8 @@ namespace SharedParameterCreator
 
             fullFile_Excel = txtCSVFile.Text;
 
-            insertIntoProjectParameters = chkInsert.Checked; 
-            
+            insertIntoProjectParameters = chkInsert.Checked;
+
             if (fullFile_Excel == string.Empty)
             {
                 TaskDialog.Show("No File Provided", "Make sure you have created a file with the .csv extension.");
@@ -93,7 +107,7 @@ namespace SharedParameterCreator
                 {
 
                     try
-                    {                        
+                    {
                         Category category = null;
                         CategorySet categorySet = null;
                         InstanceBinding instanceBinding = null;
@@ -104,7 +118,7 @@ namespace SharedParameterCreator
                         instanceBinding = myCommandData.Application.Application.Create.NewInstanceBinding(categorySet);
                         typeBinding = myCommandData.Application.Application.Create.NewInstanceBinding(categorySet);
                         bindingMap = myCommandData.Application.ActiveUIDocument.Document.ParameterBindings;
-                        
+
                         DefinitionFile sharedParametersFile;
 
                         string fileName = string.Empty;
@@ -112,7 +126,7 @@ namespace SharedParameterCreator
 
                         filePath = Path.GetDirectoryName(fullFile_Excel);
                         fileName = Path.GetFileNameWithoutExtension(fullFile_Excel);
-                        
+
                         fullFile_Parameters = filePath + "\\" + fileName + ".txt";
 
                         // THE SHARED PARAMETER FILE
@@ -133,7 +147,7 @@ namespace SharedParameterCreator
                             parameterCollection.Add(strTextLine);
 
                         }
-                        
+
                         //REVIT TRANSACTION
                         Transaction trans = new Transaction(myRevitDoc, "Create Shared Parameters");
 
@@ -148,10 +162,12 @@ namespace SharedParameterCreator
                             // E, PARAMETER NAME
 
                             string appliesTo = string.Empty;
+                            string groupUnder = string.Empty;
                             string sharedParameterGroup = string.Empty;
                             ParameterType parameterDataType;
+                            parameterDataType = ParameterType.Text;
                             string parameterDataType_Test = string.Empty;
-                            string bindType = string.Empty; 
+                            string bindType = string.Empty;
                             string parameterName = string.Empty;
 
                             char[] chrSeparator = new char[] { ',' };
@@ -163,21 +179,53 @@ namespace SharedParameterCreator
                             bindType = arrValues[3];
                             parameterName = arrValues[4];
 
-                            if (parameterDataType_Test == "Number")
+                            switch (parameterDataType_Test)
                             {
-                                parameterDataType = ParameterType.Number;
-                            }
-                            else if (parameterDataType_Test == "Integer")
-                            {
-                                parameterDataType = ParameterType.Integer;
-                            }
-                            else if (parameterDataType_Test == "Boolean")
-                            {
-                                parameterDataType = ParameterType.YesNo;
-                            }
-                            else
-                            {
-                                parameterDataType = ParameterType.Text;
+                                case "Text":
+                                    parameterDataType = ParameterType.Text;
+                                    break;
+                                case "Integer":
+                                    parameterDataType = ParameterType.Integer;
+                                    break;
+                                case "Number":
+                                    parameterDataType = ParameterType.Number;
+                                    break;
+                                case "Length":
+                                    parameterDataType = ParameterType.Length;
+                                    break;
+                                case "Area":
+                                    parameterDataType = ParameterType.Area;
+                                    break;
+                                case "Volume":
+                                    parameterDataType = ParameterType.Volume;
+                                    break;
+                                case "Angle":
+                                    parameterDataType = ParameterType.Angle;
+                                    break;
+                                case "Slope":
+                                    parameterDataType = ParameterType.Slope;
+                                    break;
+                                case "Currency":
+                                    parameterDataType = ParameterType.Currency;
+                                    break;
+                                case "Mass Density":
+                                    parameterDataType = ParameterType.MassDensity;
+                                    break;
+                                case "URL":
+                                    parameterDataType = ParameterType.URL;
+                                    break;
+                                case "Material":
+                                    parameterDataType = ParameterType.Material;
+                                    break;
+                                case "Image":
+                                    parameterDataType = ParameterType.Image;
+                                    break;
+                                case "Yes/No":
+                                    parameterDataType = ParameterType.YesNo;
+                                    break;
+                                default:
+                                    parameterDataType = ParameterType.Text;
+                                    break;
                             }
 
                             sharedParameterDefinition = sharedParametersFile.Groups.get_Item(sharedParameterGroup);
@@ -186,7 +234,7 @@ namespace SharedParameterCreator
                             {
                                 sharedParameterDefinition = sharedParametersFile.Groups.Create(sharedParameterGroup);
                             }
-                            
+
                             category = myCommandData.Application.ActiveUIDocument.Document.Settings.Categories.get_Item(appliesTo);
                             categorySet = myCommandData.Application.Application.Create.NewCategorySet();
                             categorySet.Insert(category);
@@ -213,7 +261,7 @@ namespace SharedParameterCreator
 
                         //END REVIT TRANSACTION
                         trans.Commit();
-                        
+
                         objReader.Close();
 
                         TaskDialog.Show("File Created Sucessfully", "The Shared Parameter file was created successfully");
@@ -234,7 +282,7 @@ namespace SharedParameterCreator
         {
             this.Close();
         }
-        
+
         private DefinitionFile OpenSharedParametersFile(Autodesk.Revit.ApplicationServices.Application application)
         {
 
@@ -246,9 +294,9 @@ namespace SharedParameterCreator
             application.SharedParametersFilename = fullFile_Parameters;
 
             Autodesk.Revit.DB.DefinitionFile sharedParametersFile = default(Autodesk.Revit.DB.DefinitionFile);
-            
+
             sharedParametersFile = application.OpenSharedParameterFile();
-            
+
             return sharedParametersFile;
         }
 
@@ -271,5 +319,103 @@ namespace SharedParameterCreator
             return def;
         }
 
+        private void btnOpenTemplate_Click(object sender, EventArgs e)
+        {
+            string userName = string.Empty;
+            userName = Environment.UserName;
+
+            string templateFile = string.Empty;
+
+            templateFile = @"C:\Users\" + userName + @"\Documents\CRMRevitTools\" + revitVersion + @"\Parameter_Template-" + revitVersion + ".xlsx";
+
+            if (File.Exists(templateFile))
+            {
+                try
+                {
+                    DateTime date = new DateTime();
+                    date = DateTime.Now;
+
+                    string timeStamp = date.ToString("yyyyMMddHHmmss");
+                    workingDirectory = @"C:\Users\" + userName + @"\Desktop\" + timeStamp + "-" + revitVersion + "-Shared_Parameters";
+
+                    if (!Directory.Exists(workingDirectory))
+                    {
+                        Directory.CreateDirectory(workingDirectory);
+                    }
+
+                    string workingFile = string.Empty;
+                    workingFile = workingDirectory + @"\" + timeStamp + "-" + revitVersion + "-Shared_Parameters.xlsx";
+
+                    File.Copy(templateFile, workingFile);
+
+                    if (File.Exists(workingFile))
+                    {
+                        try
+                        {
+                            Process.Start(workingFile);
+                        }
+                        catch (Exception ex)
+                        {
+                            TaskDialog taskDialog = new TaskDialog("Shared Parameter Creator");
+
+                            taskDialog.MainInstruction = "An error occurrued while opening the parameter working file." + "\n" + "Please read the following error message below";
+                            taskDialog.MainContent = ex.Message + Environment.NewLine + ex.Source;
+
+                            taskDialog.Show();
+                        }
+                    }
+                    else
+                    {
+                        TaskDialog taskDialog = new TaskDialog("Shared Parameter Creator");
+
+                        taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconNone;
+                        taskDialog.MainInstruction = "The parameter working file could not be found. It may have been moved or deleted.";
+
+                        taskDialog.Show();
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    TaskDialog taskDialog = new TaskDialog("Shared Parameter Creator");
+
+                    taskDialog.MainInstruction = "An error occurrued while copying the parameter template file." + "\n" + "Please read the following error message below";
+                    taskDialog.MainContent = ex.Message + Environment.NewLine + ex.Source;
+
+                    taskDialog.Show();
+                }
+
+            }
+            else
+            {
+                TaskDialog taskDialog = new TaskDialog("Shared Parameter Creator");
+
+                taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconNone;
+                taskDialog.MainInstruction = "The parameter template file could not be found. It may have been moved or deleted.";
+
+                taskDialog.Show();
+            }
+        }
+
+        private void MainForm_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+            string helpFile = string.Empty;
+            helpFile = @"C:\Users\" + Environment.UserName + @"\Documents\CRMRevitTools\v2017\CRMRevitTools_Help\shared_parameter_creator.html";
+
+            if (File.Exists(helpFile))
+            {
+                Process.Start(helpFile);
+            }
+            else
+            {
+                TaskDialog taskDialog = new TaskDialog("Shared Parameter Creator");
+
+                taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconNone;
+                taskDialog.MainInstruction = "The Help file for Shared Parameter Creator could not be found. It may have been moved or deleted.";
+                taskDialog.Show();
+            }
+
+        }
     }
 }

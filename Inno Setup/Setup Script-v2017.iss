@@ -1,6 +1,6 @@
 #define MyAppName "CRMRevitTools-v2017"
-#define MyAppVersion "1.0.1"
-#define MyVersionInfoVersion "1.0.1"
+#define MyAppVersion "1.0.2"
+#define MyVersionInfoVersion "1.0.2"
 #define MyAppPublisher "Christopher Ryan Mackay"
 
 [Setup]
@@ -33,6 +33,20 @@ Source: "C:\Revit Programming\CRMRevitTools-v2017\Inno Setup\CRMRevitTools\Revit
 Source: "C:\Revit Programming\CRMRevitTools-v2017\Inno Setup\CRMRevitTools\Addin File\*"; DestDir: "C:\ProgramData\Autodesk\Revit\Addins\2017"; Flags: ignoreversion
 Source: "C:\Revit Programming\CRMRevitTools-v2017\Inno Setup\CRMRevitToolsInit-v2017.exe"; DestDir: "{userdocs}\CRMRevitTools\v2017"; Flags: ignoreversion
 Source: "C:\Revit Programming\CRMRevitTools-v2017\Inno Setup\LICENSE.txt"; DestDir: "{userdocs}\CRMRevitTools\v2017"; Flags: ignoreversion
+
+;CRMRevitTools_Help
+Source: "C:\Revit Programming\CRMRevitTools-v2017\CRMRevitTools_Help\*"; DestDir: "{userdocs}\CRMRevitTools\v2017\CRMRevitTools_Help"; Flags: ignoreversion
+Source: "C:\Revit Programming\CRMRevitTools-v2017\CRMRevitTools_Help\css\*"; DestDir: "{userdocs}\CRMRevitTools\v2017\CRMRevitTools_Help\css"; Flags: ignoreversion
+
+;Create Revit Sheets
+Source: "C:\Revit Programming\CRMRevitTools-v2017\CRMRevitTools_Help\images\create_revit_sheets\*"; DestDir: "{userdocs}\CRMRevitTools\v2017\CRMRevitTools_Help\images\create_revit_sheets"; Flags: ignoreversion
+
+;Shared Parameter Creator
+Source: "C:\Revit Programming\CRMRevitTools-v2017\Parameter_Template-v2017.xlsx"; DestDir: "{userdocs}\CRMRevitTools\v2017\"; Flags: ignoreversion
+Source: "C:\Revit Programming\CRMRevitTools-v2017\CRMRevitTools_Help\images\shared_parameter_creator\*"; DestDir: "{userdocs}\CRMRevitTools\v2017\CRMRevitTools_Help\images\shared_parameter_creator"; Flags: ignoreversion
+
+;Sheet Renamer
+Source: "C:\Revit Programming\CRMRevitTools-v2017\CRMRevitTools_Help\images\sheet_renamer\*"; DestDir: "{userdocs}\CRMRevitTools\v2017\CRMRevitTools_Help\images\sheet_renamer"; Flags: ignoreversion
 
 [UninstallDelete] 
 Type: dirifempty; Name: {userdocs}\CRMRevitTools;

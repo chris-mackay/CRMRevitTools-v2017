@@ -43,6 +43,9 @@ namespace CreateRevitSheets
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.cbTitleblocks = new System.Windows.Forms.ComboBox();
             this.txtFilename = new System.Windows.Forms.TextBox();
             this.btnCreate = new System.Windows.Forms.Button();
@@ -52,23 +55,27 @@ namespace CreateRevitSheets
             this.lblTitleblocks = new System.Windows.Forms.Label();
             this.btnLoad = new System.Windows.Forms.Button();
             this.lstAvailableViews = new System.Windows.Forms.ListBox();
-            this.lstSheetsToCreate = new System.Windows.Forms.ListBox();
-            this.lstViewsToAdd = new System.Windows.Forms.ListBox();
             this.lblViews = new System.Windows.Forms.Label();
-            this.lblSheets = new System.Windows.Forms.Label();
-            this.lblViewsToAdd = new System.Windows.Forms.Label();
-            this.btnAdd = new System.Windows.Forms.Button();
-            this.btnRemove = new System.Windows.Forms.Button();
-            this.btnMoveViewUp = new System.Windows.Forms.Button();
-            this.btnMoveViewDown = new System.Windows.Forms.Button();
+            this.btnAddView = new System.Windows.Forms.Button();
+            this.btnRemoveView = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btnMoveSheetDown = new System.Windows.Forms.Button();
-            this.btnMoveSheetUp = new System.Windows.Forms.Button();
+            this.dgvSheetToCreate = new System.Windows.Forms.DataGridView();
+            this.Sheet = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.View = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cxmnuSheets = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cxmnuAddSheet = new System.Windows.Forms.ToolStripMenuItem();
+            this.cxmnuEditSheet = new System.Windows.Forms.ToolStripMenuItem();
+            this.cxmnuRemoveSheet = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.cxmnuAddView = new System.Windows.Forms.ToolStripMenuItem();
+            this.cxmnuRemoveView = new System.Windows.Forms.ToolStripMenuItem();
             this.btnEditSheet = new System.Windows.Forms.Button();
             this.btnRemoveSheet = new System.Windows.Forms.Button();
-            this.btnAddSheet = new System.Windows.Forms.Button();
             this.cbViewTypes = new System.Windows.Forms.ComboBox();
+            this.btnAddSheet = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvSheetToCreate)).BeginInit();
+            this.cxmnuSheets.SuspendLayout();
             this.SuspendLayout();
             // 
             // cbTitleblocks
@@ -77,7 +84,7 @@ namespace CreateRevitSheets
             this.cbTitleblocks.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbTitleblocks.ForeColor = System.Drawing.SystemColors.ControlText;
             this.cbTitleblocks.FormattingEnabled = true;
-            this.cbTitleblocks.Location = new System.Drawing.Point(9, 79);
+            this.cbTitleblocks.Location = new System.Drawing.Point(9, 75);
             this.cbTitleblocks.Name = "cbTitleblocks";
             this.cbTitleblocks.Size = new System.Drawing.Size(558, 21);
             this.cbTitleblocks.TabIndex = 4;
@@ -88,7 +95,7 @@ namespace CreateRevitSheets
             this.txtFilename.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.txtFilename.Enabled = false;
             this.txtFilename.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.txtFilename.Location = new System.Drawing.Point(9, 34);
+            this.txtFilename.Location = new System.Drawing.Point(9, 30);
             this.txtFilename.Name = "txtFilename";
             this.txtFilename.ReadOnly = true;
             this.txtFilename.Size = new System.Drawing.Size(558, 20);
@@ -99,7 +106,7 @@ namespace CreateRevitSheets
             this.btnCreate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCreate.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnCreate.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnCreate.Location = new System.Drawing.Point(516, 502);
+            this.btnCreate.Location = new System.Drawing.Point(516, 464);
             this.btnCreate.Name = "btnCreate";
             this.btnCreate.Size = new System.Drawing.Size(75, 23);
             this.btnCreate.TabIndex = 1;
@@ -112,7 +119,7 @@ namespace CreateRevitSheets
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnCancel.Location = new System.Drawing.Point(597, 502);
+            this.btnCancel.Location = new System.Drawing.Point(597, 464);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 2;
@@ -124,7 +131,7 @@ namespace CreateRevitSheets
             // 
             this.btnBrowse.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnBrowse.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnBrowse.Location = new System.Drawing.Point(573, 33);
+            this.btnBrowse.Location = new System.Drawing.Point(573, 29);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(75, 23);
             this.btnBrowse.TabIndex = 2;
@@ -138,7 +145,7 @@ namespace CreateRevitSheets
             this.lblSheetList.AutoSize = true;
             this.lblSheetList.BackColor = System.Drawing.Color.Transparent;
             this.lblSheetList.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblSheetList.Location = new System.Drawing.Point(9, 16);
+            this.lblSheetList.Location = new System.Drawing.Point(9, 12);
             this.lblSheetList.Name = "lblSheetList";
             this.lblSheetList.Size = new System.Drawing.Size(66, 13);
             this.lblSheetList.TabIndex = 0;
@@ -150,7 +157,7 @@ namespace CreateRevitSheets
             this.lblTitleblocks.AutoSize = true;
             this.lblTitleblocks.BackColor = System.Drawing.Color.Transparent;
             this.lblTitleblocks.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblTitleblocks.Location = new System.Drawing.Point(9, 61);
+            this.lblTitleblocks.Location = new System.Drawing.Point(9, 57);
             this.lblTitleblocks.Name = "lblTitleblocks";
             this.lblTitleblocks.Size = new System.Drawing.Size(91, 13);
             this.lblTitleblocks.TabIndex = 3;
@@ -160,7 +167,7 @@ namespace CreateRevitSheets
             // 
             this.btnLoad.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnLoad.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnLoad.Location = new System.Drawing.Point(573, 78);
+            this.btnLoad.Location = new System.Drawing.Point(573, 74);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(75, 23);
             this.btnLoad.TabIndex = 5;
@@ -173,32 +180,11 @@ namespace CreateRevitSheets
             this.lstAvailableViews.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.lstAvailableViews.FormattingEnabled = true;
             this.lstAvailableViews.HorizontalScrollbar = true;
-            this.lstAvailableViews.Location = new System.Drawing.Point(9, 144);
+            this.lstAvailableViews.Location = new System.Drawing.Point(9, 135);
             this.lstAvailableViews.Name = "lstAvailableViews";
-            this.lstAvailableViews.Size = new System.Drawing.Size(166, 277);
+            this.lstAvailableViews.ScrollAlwaysVisible = true;
+            this.lstAvailableViews.Size = new System.Drawing.Size(166, 264);
             this.lstAvailableViews.TabIndex = 7;
-            // 
-            // lstSheetsToCreate
-            // 
-            this.lstSheetsToCreate.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.lstSheetsToCreate.FormattingEnabled = true;
-            this.lstSheetsToCreate.HorizontalScrollbar = true;
-            this.lstSheetsToCreate.Location = new System.Drawing.Point(310, 144);
-            this.lstSheetsToCreate.Name = "lstSheetsToCreate";
-            this.lstSheetsToCreate.Size = new System.Drawing.Size(166, 277);
-            this.lstSheetsToCreate.TabIndex = 15;
-            this.lstSheetsToCreate.SelectedIndexChanged += new System.EventHandler(this.lstSheetsToCreate_SelectedIndexChanged);
-            // 
-            // lstViewsToAdd
-            // 
-            this.lstViewsToAdd.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.lstViewsToAdd.FormattingEnabled = true;
-            this.lstViewsToAdd.HorizontalScrollbar = true;
-            this.lstViewsToAdd.Location = new System.Drawing.Point(482, 144);
-            this.lstViewsToAdd.Name = "lstViewsToAdd";
-            this.lstViewsToAdd.Size = new System.Drawing.Size(166, 277);
-            this.lstViewsToAdd.TabIndex = 19;
-            this.lstViewsToAdd.SelectedIndexChanged += new System.EventHandler(this.lstViewsToAdd_SelectedIndexChanged);
             // 
             // lblViews
             // 
@@ -206,136 +192,164 @@ namespace CreateRevitSheets
             this.lblViews.AutoSize = true;
             this.lblViews.BackColor = System.Drawing.Color.Transparent;
             this.lblViews.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblViews.Location = new System.Drawing.Point(9, 126);
+            this.lblViews.Location = new System.Drawing.Point(9, 119);
             this.lblViews.Name = "lblViews";
             this.lblViews.Size = new System.Drawing.Size(81, 13);
             this.lblViews.TabIndex = 6;
             this.lblViews.Text = "Available Views";
             // 
-            // lblSheets
+            // btnAddView
             // 
-            this.lblSheets.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.lblSheets.AutoSize = true;
-            this.lblSheets.BackColor = System.Drawing.Color.Transparent;
-            this.lblSheets.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblSheets.Location = new System.Drawing.Point(310, 126);
-            this.lblSheets.Name = "lblSheets";
-            this.lblSheets.Size = new System.Drawing.Size(80, 13);
-            this.lblSheets.TabIndex = 14;
-            this.lblSheets.Text = "Sheet to create";
+            this.btnAddView.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btnAddView.Location = new System.Drawing.Point(182, 246);
+            this.btnAddView.Name = "btnAddView";
+            this.btnAddView.Size = new System.Drawing.Size(123, 23);
+            this.btnAddView.TabIndex = 12;
+            this.btnAddView.Text = "Add View -->";
+            this.btnAddView.UseVisualStyleBackColor = true;
+            this.btnAddView.Click += new System.EventHandler(this.btnAddView_Click);
             // 
-            // lblViewsToAdd
+            // btnRemoveView
             // 
-            this.lblViewsToAdd.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.lblViewsToAdd.AutoSize = true;
-            this.lblViewsToAdd.BackColor = System.Drawing.Color.Transparent;
-            this.lblViewsToAdd.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblViewsToAdd.Location = new System.Drawing.Point(482, 126);
-            this.lblViewsToAdd.Name = "lblViewsToAdd";
-            this.lblViewsToAdd.Size = new System.Drawing.Size(74, 13);
-            this.lblViewsToAdd.TabIndex = 18;
-            this.lblViewsToAdd.Text = "View for sheet";
-            // 
-            // btnAdd
-            // 
-            this.btnAdd.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnAdd.Location = new System.Drawing.Point(181, 255);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(123, 23);
-            this.btnAdd.TabIndex = 12;
-            this.btnAdd.Text = "Add View -->";
-            this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
-            // 
-            // btnRemove
-            // 
-            this.btnRemove.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnRemove.Location = new System.Drawing.Point(181, 284);
-            this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(123, 23);
-            this.btnRemove.TabIndex = 13;
-            this.btnRemove.Text = "<-- Remove View";
-            this.btnRemove.UseVisualStyleBackColor = true;
-            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
-            // 
-            // btnMoveViewUp
-            // 
-            this.btnMoveViewUp.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnMoveViewUp.Location = new System.Drawing.Point(487, 426);
-            this.btnMoveViewUp.Name = "btnMoveViewUp";
-            this.btnMoveViewUp.Size = new System.Drawing.Size(75, 23);
-            this.btnMoveViewUp.TabIndex = 20;
-            this.btnMoveViewUp.Text = "Move Up";
-            this.btnMoveViewUp.UseVisualStyleBackColor = true;
-            this.btnMoveViewUp.Click += new System.EventHandler(this.btnMoveViewUp_Click);
-            // 
-            // btnMoveViewDown
-            // 
-            this.btnMoveViewDown.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnMoveViewDown.Location = new System.Drawing.Point(568, 426);
-            this.btnMoveViewDown.Name = "btnMoveViewDown";
-            this.btnMoveViewDown.Size = new System.Drawing.Size(75, 23);
-            this.btnMoveViewDown.TabIndex = 21;
-            this.btnMoveViewDown.Text = "Move Down";
-            this.btnMoveViewDown.UseVisualStyleBackColor = true;
-            this.btnMoveViewDown.Click += new System.EventHandler(this.btnMoveViewDown_Click);
+            this.btnRemoveView.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btnRemoveView.Location = new System.Drawing.Point(182, 275);
+            this.btnRemoveView.Name = "btnRemoveView";
+            this.btnRemoveView.Size = new System.Drawing.Size(123, 23);
+            this.btnRemoveView.TabIndex = 13;
+            this.btnRemoveView.Text = "<-- Remove View";
+            this.btnRemoveView.UseVisualStyleBackColor = true;
+            this.btnRemoveView.Click += new System.EventHandler(this.btnRemoveView_Click);
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.btnMoveSheetDown);
-            this.panel1.Controls.Add(this.btnMoveSheetUp);
+            this.panel1.Controls.Add(this.dgvSheetToCreate);
             this.panel1.Controls.Add(this.btnEditSheet);
             this.panel1.Controls.Add(this.btnRemoveSheet);
-            this.panel1.Controls.Add(this.btnAddSheet);
             this.panel1.Controls.Add(this.cbViewTypes);
-            this.panel1.Controls.Add(this.btnMoveViewDown);
+            this.panel1.Controls.Add(this.btnAddSheet);
             this.panel1.Controls.Add(this.btnLoad);
-            this.panel1.Controls.Add(this.btnRemove);
+            this.panel1.Controls.Add(this.btnRemoveView);
             this.panel1.Controls.Add(this.lblTitleblocks);
-            this.panel1.Controls.Add(this.btnMoveViewUp);
             this.panel1.Controls.Add(this.lblSheetList);
-            this.panel1.Controls.Add(this.btnAdd);
+            this.panel1.Controls.Add(this.btnAddView);
             this.panel1.Controls.Add(this.btnBrowse);
-            this.panel1.Controls.Add(this.lstViewsToAdd);
-            this.panel1.Controls.Add(this.lblViewsToAdd);
             this.panel1.Controls.Add(this.lstAvailableViews);
             this.panel1.Controls.Add(this.txtFilename);
             this.panel1.Controls.Add(this.cbTitleblocks);
-            this.panel1.Controls.Add(this.lblSheets);
-            this.panel1.Controls.Add(this.lstSheetsToCreate);
             this.panel1.Controls.Add(this.lblViews);
             this.panel1.Location = new System.Drawing.Point(13, 12);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(659, 479);
+            this.panel1.Size = new System.Drawing.Size(659, 440);
             this.panel1.TabIndex = 0;
             // 
-            // btnMoveSheetDown
+            // dgvSheetToCreate
             // 
-            this.btnMoveSheetDown.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnMoveSheetDown.Location = new System.Drawing.Point(396, 426);
-            this.btnMoveSheetDown.Name = "btnMoveSheetDown";
-            this.btnMoveSheetDown.Size = new System.Drawing.Size(75, 23);
-            this.btnMoveSheetDown.TabIndex = 17;
-            this.btnMoveSheetDown.Text = "Move Down";
-            this.btnMoveSheetDown.UseVisualStyleBackColor = true;
-            this.btnMoveSheetDown.Click += new System.EventHandler(this.btnMoveSheetDown_Click);
+            this.dgvSheetToCreate.AllowUserToAddRows = false;
+            this.dgvSheetToCreate.AllowUserToDeleteRows = false;
+            this.dgvSheetToCreate.AllowUserToOrderColumns = true;
+            this.dgvSheetToCreate.AllowUserToResizeColumns = false;
+            this.dgvSheetToCreate.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.dgvSheetToCreate.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            this.dgvSheetToCreate.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.dgvSheetToCreate.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvSheetToCreate.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.dgvSheetToCreate.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.MenuHighlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvSheetToCreate.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            this.dgvSheetToCreate.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.dgvSheetToCreate.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Sheet,
+            this.View});
+            this.dgvSheetToCreate.ContextMenuStrip = this.cxmnuSheets;
+            this.dgvSheetToCreate.GridColor = System.Drawing.SystemColors.ControlLight;
+            this.dgvSheetToCreate.Location = new System.Drawing.Point(313, 114);
+            this.dgvSheetToCreate.MultiSelect = false;
+            this.dgvSheetToCreate.Name = "dgvSheetToCreate";
+            this.dgvSheetToCreate.ReadOnly = true;
+            this.dgvSheetToCreate.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            this.dgvSheetToCreate.RowHeadersVisible = false;
+            this.dgvSheetToCreate.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.dgvSheetToCreate.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvSheetToCreate.Size = new System.Drawing.Size(335, 314);
+            this.dgvSheetToCreate.TabIndex = 16;
             // 
-            // btnMoveSheetUp
+            // Sheet
             // 
-            this.btnMoveSheetUp.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnMoveSheetUp.Location = new System.Drawing.Point(315, 426);
-            this.btnMoveSheetUp.Name = "btnMoveSheetUp";
-            this.btnMoveSheetUp.Size = new System.Drawing.Size(75, 23);
-            this.btnMoveSheetUp.TabIndex = 16;
-            this.btnMoveSheetUp.Text = "Move Up";
-            this.btnMoveSheetUp.UseVisualStyleBackColor = true;
-            this.btnMoveSheetUp.Click += new System.EventHandler(this.btnMoveSheetUp_Click);
+            this.Sheet.HeaderText = "Sheet";
+            this.Sheet.Name = "Sheet";
+            this.Sheet.ReadOnly = true;
+            // 
+            // View
+            // 
+            this.View.HeaderText = "View";
+            this.View.Name = "View";
+            this.View.ReadOnly = true;
+            // 
+            // cxmnuSheets
+            // 
+            this.cxmnuSheets.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cxmnuAddSheet,
+            this.cxmnuEditSheet,
+            this.cxmnuRemoveSheet,
+            this.toolStripSeparator1,
+            this.cxmnuAddView,
+            this.cxmnuRemoveView});
+            this.cxmnuSheets.Name = "cxmnuSheets";
+            this.cxmnuSheets.Size = new System.Drawing.Size(167, 120);
+            // 
+            // cxmnuAddSheet
+            // 
+            this.cxmnuAddSheet.Name = "cxmnuAddSheet";
+            this.cxmnuAddSheet.Size = new System.Drawing.Size(166, 22);
+            this.cxmnuAddSheet.Text = "Add Sheet";
+            this.cxmnuAddSheet.Click += new System.EventHandler(this.cxmnuAddSheet_Click);
+            // 
+            // cxmnuEditSheet
+            // 
+            this.cxmnuEditSheet.Name = "cxmnuEditSheet";
+            this.cxmnuEditSheet.Size = new System.Drawing.Size(166, 22);
+            this.cxmnuEditSheet.Text = "Edit Sheet";
+            this.cxmnuEditSheet.Click += new System.EventHandler(this.cxmnuEditSheet_Click);
+            // 
+            // cxmnuRemoveSheet
+            // 
+            this.cxmnuRemoveSheet.Name = "cxmnuRemoveSheet";
+            this.cxmnuRemoveSheet.Size = new System.Drawing.Size(166, 22);
+            this.cxmnuRemoveSheet.Text = "Remove Sheet";
+            this.cxmnuRemoveSheet.Click += new System.EventHandler(this.cxmnuRemoveSheet_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(163, 6);
+            // 
+            // cxmnuAddView
+            // 
+            this.cxmnuAddView.Name = "cxmnuAddView";
+            this.cxmnuAddView.Size = new System.Drawing.Size(166, 22);
+            this.cxmnuAddView.Text = "Add View -->";
+            this.cxmnuAddView.Click += new System.EventHandler(this.cxmnuAddView_Click);
+            // 
+            // cxmnuRemoveView
+            // 
+            this.cxmnuRemoveView.Name = "cxmnuRemoveView";
+            this.cxmnuRemoveView.Size = new System.Drawing.Size(166, 22);
+            this.cxmnuRemoveView.Text = "<-- Remove View";
+            this.cxmnuRemoveView.Click += new System.EventHandler(this.cxmnuRemoveView_Click);
             // 
             // btnEditSheet
             // 
-            this.btnEditSheet.Location = new System.Drawing.Point(181, 173);
+            this.btnEditSheet.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btnEditSheet.Location = new System.Drawing.Point(182, 164);
             this.btnEditSheet.Name = "btnEditSheet";
             this.btnEditSheet.Size = new System.Drawing.Size(123, 23);
             this.btnEditSheet.TabIndex = 10;
@@ -346,7 +360,7 @@ namespace CreateRevitSheets
             // btnRemoveSheet
             // 
             this.btnRemoveSheet.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnRemoveSheet.Location = new System.Drawing.Point(181, 202);
+            this.btnRemoveSheet.Location = new System.Drawing.Point(182, 193);
             this.btnRemoveSheet.Name = "btnRemoveSheet";
             this.btnRemoveSheet.Size = new System.Drawing.Size(123, 23);
             this.btnRemoveSheet.TabIndex = 11;
@@ -354,19 +368,9 @@ namespace CreateRevitSheets
             this.btnRemoveSheet.UseVisualStyleBackColor = true;
             this.btnRemoveSheet.Click += new System.EventHandler(this.btnRemoveSheet_Click);
             // 
-            // btnAddSheet
-            // 
-            this.btnAddSheet.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnAddSheet.Location = new System.Drawing.Point(181, 144);
-            this.btnAddSheet.Name = "btnAddSheet";
-            this.btnAddSheet.Size = new System.Drawing.Size(123, 23);
-            this.btnAddSheet.TabIndex = 9;
-            this.btnAddSheet.Text = "Add Sheet";
-            this.btnAddSheet.UseVisualStyleBackColor = true;
-            this.btnAddSheet.Click += new System.EventHandler(this.btnAddSheet_Click);
-            // 
             // cbViewTypes
             // 
+            this.cbViewTypes.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.cbViewTypes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbViewTypes.FormattingEnabled = true;
             this.cbViewTypes.Items.AddRange(new object[] {
@@ -376,11 +380,22 @@ namespace CreateRevitSheets
             "Legends",
             "Sections",
             "Elevations"});
-            this.cbViewTypes.Location = new System.Drawing.Point(9, 427);
+            this.cbViewTypes.Location = new System.Drawing.Point(9, 407);
             this.cbViewTypes.Name = "cbViewTypes";
             this.cbViewTypes.Size = new System.Drawing.Size(166, 21);
             this.cbViewTypes.TabIndex = 8;
             this.cbViewTypes.SelectedIndexChanged += new System.EventHandler(this.cbViews_SelectedIndexChanged);
+            // 
+            // btnAddSheet
+            // 
+            this.btnAddSheet.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btnAddSheet.Location = new System.Drawing.Point(182, 135);
+            this.btnAddSheet.Name = "btnAddSheet";
+            this.btnAddSheet.Size = new System.Drawing.Size(123, 23);
+            this.btnAddSheet.TabIndex = 9;
+            this.btnAddSheet.Text = "Add Sheet";
+            this.btnAddSheet.UseVisualStyleBackColor = true;
+            this.btnAddSheet.Click += new System.EventHandler(this.btnAddSheet_Click);
             // 
             // MainForm
             // 
@@ -389,21 +404,25 @@ namespace CreateRevitSheets
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(684, 537);
+            this.ClientSize = new System.Drawing.Size(684, 499);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnCreate);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.HelpButton = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MainForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Create Revit Sheets";
+            this.Text = "Create Sheets";
+            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.MainForm_HelpButtonClicked);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvSheetToCreate)).EndInit();
+            this.cxmnuSheets.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -419,21 +438,23 @@ namespace CreateRevitSheets
         private System.Windows.Forms.Label lblTitleblocks;
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.Label lblViews;
-        private System.Windows.Forms.Label lblSheets;
-        private System.Windows.Forms.Label lblViewsToAdd;
-        private System.Windows.Forms.Button btnAdd;
-        private System.Windows.Forms.Button btnRemove;
+        private System.Windows.Forms.Button btnAddView;
+        private System.Windows.Forms.Button btnRemoveView;
         public System.Windows.Forms.ListBox lstAvailableViews;
-        public System.Windows.Forms.ListBox lstSheetsToCreate;
-        public System.Windows.Forms.ListBox lstViewsToAdd;
-        private System.Windows.Forms.Button btnMoveViewUp;
-        private System.Windows.Forms.Button btnMoveViewDown;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ComboBox cbViewTypes;
         private System.Windows.Forms.Button btnRemoveSheet;
         private System.Windows.Forms.Button btnAddSheet;
         public System.Windows.Forms.Button btnEditSheet;
-        private System.Windows.Forms.Button btnMoveSheetDown;
-        private System.Windows.Forms.Button btnMoveSheetUp;
+        private System.Windows.Forms.DataGridView dgvSheetToCreate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Sheet;
+        private System.Windows.Forms.DataGridViewTextBoxColumn View;
+        private System.Windows.Forms.ContextMenuStrip cxmnuSheets;
+        private System.Windows.Forms.ToolStripMenuItem cxmnuAddSheet;
+        private System.Windows.Forms.ToolStripMenuItem cxmnuEditSheet;
+        private System.Windows.Forms.ToolStripMenuItem cxmnuRemoveSheet;
+        private System.Windows.Forms.ToolStripMenuItem cxmnuRemoveView;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem cxmnuAddView;
     }
 }

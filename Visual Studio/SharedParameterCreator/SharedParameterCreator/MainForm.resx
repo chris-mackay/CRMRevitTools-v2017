@@ -117,4 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lblInstructions.Text" xml:space="preserve">
+    <value>Create a (.csv) file to create Shared Parameters (.txt) with. Click Open Template and fill in the fields. Click the ? button above for instructions on filling out the fields. Save As the template to a CSV (Comma delimited) (*.csv) file. Click Browse below to load the file.</value>
+  </data>
 </root>

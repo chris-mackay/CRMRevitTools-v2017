@@ -22,6 +22,7 @@ using System.IO;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using System.Text;
+using System.Diagnostics;
 
 namespace CreateRevitSheets
 {
@@ -34,37 +35,36 @@ namespace CreateRevitSheets
         public Document revitDoc;
 
         //TITLEBLOCKS
-        public FilteredElementCollector titleblockCollector;
+        private FilteredElementCollector titleblockCollector;
 
         //VIEWS
-        public ElementCategoryFilter viewFilter;
-        public FilteredElementCollector viewCollector;
+        private ElementCategoryFilter viewFilter;
+        private FilteredElementCollector viewCollector;
 
         //VIEW SHEETS
-        public FilteredElementCollector viewSheetCollector;
+        private FilteredElementCollector viewSheetCollector;
 
         //ILISTS
-        public IList<Element> viewList;
+        private IList<Element> viewList;
 
         //ISETS
-        public ISet<ElementId> usedViewIdsOnSheet;
-        public ISet<ElementId> usedViewIdList;
+        private ISet<ElementId> usedViewIdsOnSheet;
 
         //LISTS
-        public List<string> usedViewNames;
-        public List<string> usedViewSheetNumbers;
+        private List<string> usedViewNames;
+        private List<string> usedViewSheetNumbers;
 
         //VIEW DICTIONARY
-        public Dictionary<string, ElementId> viewDictionary;
-
+        private Dictionary<string, ElementId> viewDictionary;
+        
         //STRINGS
-        public string titleBlockName;
+        private string titleBlockName;
         
         #endregion
        
         public MainForm()
         {
-            InitializeComponent();          
+            InitializeComponent();
         }
 
         public MainForm(UIApplication incomingUIApp)
@@ -72,6 +72,8 @@ namespace CreateRevitSheets
             InitializeComponent();
             revitUIApp = incomingUIApp;
             revitDoc = revitUIApp.ActiveUIDocument.Document;
+
+            dgvSheetToCreate.Rows.Clear();
 
             //TITLEBLOCKS
             titleblockCollector = new FilteredElementCollector(revitDoc);
@@ -89,7 +91,6 @@ namespace CreateRevitSheets
 
             //HASH SETS
             usedViewIdsOnSheet = new HashSet<ElementId>();
-            usedViewIdList = new HashSet<ElementId>(); //CONTAINS ALL THE USED VIEW ID'S IN THE PROJECT. VIEWS THAT ARE ALREADY ON A SHEET
 
             //LISTS
             usedViewNames = new List<string>();
@@ -99,44 +100,14 @@ namespace CreateRevitSheets
             viewDictionary = new Dictionary<string, ElementId>();
          
         }
-
-        private void btnBrowse_Click(object sender, EventArgs e)
-        {
-            //ALLOW THE USER TO SELECT A SHEET LIST FILE.
-            OpenFileDialog ofd = new OpenFileDialog();
-
-            string libraryPath = string.Empty;
-            libraryPath = "c:\\"; //DEFAULT PATH
-            ofd.InitialDirectory = libraryPath;
-
-            ofd.Filter = "CSV (Comma delimited) (.csv) Files (*.csv)|*.csv";
-
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                string fileName = null;
-                fileName = ofd.FileName;
-                txtFilename.Text = fileName;
-
-                TaskDialog tdConfirmSheetLoad = new TaskDialog("Load Sheets");
-                tdConfirmSheetLoad.MainInstruction = "Are you sure you want to load sheets from " + fileName + "?";
-                tdConfirmSheetLoad.MainContent = "If you have already created sheets using 'Add Sheet', these will be overwritten.";
-                tdConfirmSheetLoad.CommonButtons = TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No;
-
-                if (tdConfirmSheetLoad.Show() == TaskDialogResult.Yes)
-                {
-                    this.GetAllSheetsToCreateFromCSV(fileName); //FILLS THE LISTBOX WITH THE SHEETS YOU WANT TO CREATE
-                }
-            }
-
-        }
-
+        
         private void cbTitleblocks_SelectedIndexChanged(object sender, EventArgs e)
         {
 
             titleBlockName = cbTitleblocks.SelectedItem.ToString();
             titleBlockName = titleBlockName.Substring(titleBlockName.IndexOf(":") + 1).Trim();
 
-            if (cbTitleblocks.SelectedIndex != -1 && lstSheetsToCreate.Items.Count > 0) //CHECKS TO MAKE SURE A TITLEBLOCK IS SELECTED AND THERE IS AT LEAST 1 SHEET TO CREATE
+            if (cbTitleblocks.SelectedIndex != -1 && dgvSheetToCreate.Rows.Count > 0) //CHECKS TO MAKE SURE A TITLEBLOCK IS SELECTED AND THERE IS AT LEAST 1 SHEET TO CREATE
             {
                 btnCreate.Enabled = true;
             }
@@ -146,92 +117,7 @@ namespace CreateRevitSheets
             }
 
         }
-
-        private void btnLoad_Click(object sender, EventArgs e)
-        {
-
-            try
-            {
-                LoadTitleblock();
-            }
-            catch (Exception ex)
-            {
-
-                TaskDialog.Show("Error", ex.Message + "\n\n" + ex.Source);
-            }
-
-        }
-
-        private void btnAdd_Click(object sender, EventArgs e)
-        {
-
-            if (this.lstAvailableViews.SelectedItems.Count > 0)
-            {
-
-                string selectedView = string.Empty;
-                selectedView = lstAvailableViews.SelectedItem.ToString();
-
-                //GET CURRENTLY SELECTED INDEX OF SELECTED SHEET
-                int selectedSheetIndex = 0;
-                selectedSheetIndex = lstSheetsToCreate.SelectedIndex;
-
-                //CHECK IF A SHEET IS SELECTED
-                if (selectedSheetIndex < 0)
-                {
-                    TaskDialog.Show("Add View", "Select a sheet that you want to add the view to");
-                }
-                else
-                {
-                    string viewToAdd = string.Empty;
-                    viewToAdd = lstViewsToAdd.Items[selectedSheetIndex].ToString();
-
-                    if (viewToAdd != "")
-                    {
-                        TaskDialog.Show("Add View", "The selected sheet already has a view assigned to it");
-                    }
-                    else
-                    {
-                        //INSERT VIEW AT CURRENTLY SELECTED SHEET
-                        lstViewsToAdd.Items.RemoveAt(selectedSheetIndex);
-                        lstViewsToAdd.Items.Insert(selectedSheetIndex, selectedView);
-                        lstAvailableViews.Items.Remove(selectedView);
-                    }
-                }
-            }
-            else
-            {
-                return;
-            }
-
-        }
-
-        private void btnRemove_Click(object sender, EventArgs e)
-        {
-
-            if (this.lstViewsToAdd.SelectedItems.Count > 0)
-            {
-                string selectedView = string.Empty;
-                selectedView = lstViewsToAdd.SelectedItem.ToString();
-
-                int selectedViewIndex = 0;
-                selectedViewIndex = lstViewsToAdd.SelectedIndex;
-
-                if (selectedView != "")
-                {
-                    lstViewsToAdd.Items.Remove(selectedView);
-                    lstViewsToAdd.Items.Insert(selectedViewIndex, "");
-                    lstAvailableViews.Items.Add(selectedView);
-                }
-
-            }
                 
-            else
-            {
-                return;
-            }
-
-        }
-
         private void MainForm_Load(object sender, EventArgs e)
         {
             this.GetAllAvailableViewNamesAndIds();
@@ -241,37 +127,7 @@ namespace CreateRevitSheets
             cbViewTypes.SelectedIndex = 0; //SELECT FLOOR PLANS BY DEFAULT
             btnCreate.Enabled = false;
         }
-
-        private void btnMoveSheetUp_Click(object sender, EventArgs e)
-        {
-            MoveSheetUp(); //MOVES LISTBOX ITEM UP THE LIST
-        }
-
-        private void btnMoveSheetDown_Click(object sender, EventArgs e)
-        {
-            MoveSheetDown(); //MOVES LISTBOX ITEM DOWN THE LIST
-        }
-
-        private void btnMoveViewUp_Click(object sender, EventArgs e)
-        {
-            MoveViewUp(); //MOVES LISTBOX ITEM UP THE LIST
-        }
-
-        private void btnMoveViewDown_Click(object sender, EventArgs e)
-        {
-            MoveViewDown(); //MOVES LISTBOX ITEM DOWN THE LIST
-        }
-
-        private void btnCreate_Click(object sender, EventArgs e)
-        {
-            CreateSheets(); //MAIN FUNCTION THAT CREATES SHEETS AND ASSIGNS VIEW TO SHEETS
-        }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
+        
         public Result LoadTitleblock()
         {
 
@@ -334,7 +190,7 @@ namespace CreateRevitSheets
             string csvLine = null;
             StreamReader reader = new StreamReader(_filename);
 
-            lstSheetsToCreate.Items.Clear();
+            dgvSheetToCreate.Rows.Clear();
 
             while ((csvLine = reader.ReadLine()) != null)
             {
@@ -361,8 +217,7 @@ namespace CreateRevitSheets
                     }
                     else
                     {
-                        this.lstSheetsToCreate.Items.Add(entry); //ADDS THE NEW SHEET TO THE LIST
-                        this.lstViewsToAdd.Items.Add(""); //CREATES A DEFAULT EMPTY SHEET BY ADDING A VIEW NAME OF ""
+                        this.dgvSheetToCreate.Rows.Add(entry, ""); //ADDS THE NEW SHEET TO THE LIST
                     }
                     
                 }
@@ -370,7 +225,7 @@ namespace CreateRevitSheets
 
             if (disregardedSheetsNumbersList.Count > 0)
             {   
-                TaskDialog taskDialog = new TaskDialog("Create Revit Sheets");
+                TaskDialog taskDialog = new TaskDialog("Create Sheets");
 
                 taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconNone;
                 taskDialog.MainInstruction = "The following sheets already exist in the project and will not be added to the list";
@@ -378,7 +233,7 @@ namespace CreateRevitSheets
                 taskDialog.Show();
             }
 
-            if (cbTitleblocks.SelectedIndex != -1 && lstSheetsToCreate.Items.Count > 0) //CHECKS TO MAKE SURE A TITLEBLOCK IS SELECTED AND THERE IS AT LEAST 1 SHEET TO CREATE
+            if (cbTitleblocks.SelectedIndex != -1 && dgvSheetToCreate.Rows.Count > 0) //CHECKS TO MAKE SURE A TITLEBLOCK IS SELECTED AND THERE IS AT LEAST 1 SHEET TO CREATE
             {
                 btnCreate.Enabled = true;
             }
@@ -398,21 +253,37 @@ namespace CreateRevitSheets
 
                 foreach (ElementId id in usedViewIdsOnSheet)
                 {
-                    usedViewIdList.Add(id);
 
                     Element elem = null;
                     elem = revitDoc.GetElement(id);
-                    usedViewNames.Add(elem.Name);
+
+                    Autodesk.Revit.DB.View v = null;
+                    v = elem as Autodesk.Revit.DB.View;
+
+                    string vName = string.Empty;
+                    vName = v.ViewName + " (" + v.ViewType + ")";
+
+                    if (!v.IsTemplate)
+                    {
+                        usedViewNames.Add(vName);
+                    }
 
                 }
             }
             
             foreach (Autodesk.Revit.DB.View v in viewList)
             {
-                if (!usedViewNames.Contains(v.ViewName))
+                string vName = string.Empty;
+                vName = v.ViewName + " (" + v.ViewType + ")";
+
+                if (!v.IsTemplate)
                 {
-                    viewDictionary.Add(v.Name, v.Id);
+                    if (!usedViewNames.Contains(vName))
+                    {
+                        viewDictionary.Add(vName, v.Id);
+                    }
                 }
+
             }
         }
 
@@ -429,162 +300,38 @@ namespace CreateRevitSheets
 
         public void GetAllAvailableViewsAndFill_lstAvailableViews(IList<Element> _viewList, ViewType _viewType)
         {
+
+            List<string> viewsToAdd = new List<string>();
+
+            if (dgvSheetToCreate.Rows.Count > 0)
+            {
+                //FILL LIST OF VIEWS
+                foreach (DataGridViewRow item in dgvSheetToCreate.Rows)
+                {
+                    string view = string.Empty;
+                    view = Convert.ToString(item.Cells["View"].Value);
+                    viewsToAdd.Add(view);
+                }
+            }
+
             foreach (Autodesk.Revit.DB.View v in _viewList)
             {
                 if (v.ViewType == _viewType)
                 {
-                    if (!lstAvailableViews.Items.Contains(v.ViewName.ToString()) && !lstViewsToAdd.Items.Contains(v.ViewName.ToString()) && !usedViewNames.Contains(v.ViewName.ToString()))
-                    {                                               
-                        this.lstAvailableViews.Items.Add(v.ViewName); //FILLS LISTBOX WITH ALL THE AVAILABLE VIEWS IN THE DOCUMENT BASED ON SELECTED VIEW TYPE
-                    }
-                }
-            }
-        }
+                    string vName = string.Empty;
+                    vName = v.ViewName + " (" + v.ViewType + ")";
 
-        public void MoveSheetUp()
-        {
-            MoveItem(-1, lstSheetsToCreate);
-        }
-
-        public void MoveSheetDown()
-        {
-            MoveItem(1, lstSheetsToCreate);
-        }
-
-        public void MoveViewUp()
-        {
-            MoveItem(-1, lstViewsToAdd);
-        }
-
-        public void MoveViewDown()
-        {
-            MoveItem(1, lstViewsToAdd);
-        }
-
-        public void MoveItem(int direction, ListBox listBox)
-        {
-            //CHECK SELECTED ITEM
-            if (listBox.SelectedItem == null || listBox.SelectedIndex < 0)
-            {
-                return; //NO ITEM SELECTED - DO NOTHING
-            }
-
-            //CALCULATE NEW INDEX USING MOVE DIRECTION
-            int newIndex = listBox.SelectedIndex + direction;
-
-            //CHECK BOUNDS OF THE RANGE
-            if (newIndex < 0 || newIndex >= listBox.Items.Count)
-            {
-                return; //INDEX OUT OF RANGE - DO NOTHING
-            }
-
-            object selected = listBox.SelectedItem;
-
-            //REMOVING REMOVABLE ELEMENT
-            listBox.Items.Remove(selected);
-            //INSERT IT IN NEW POSITION
-            listBox.Items.Insert(newIndex, selected);
-            //RESTORE SELECTION
-            listBox.SetSelected(newIndex, true);
-
-        }
-
-        public void CreateSheets()
-        {
-            TaskDialog taskDialog = new TaskDialog("Create Revit Sheets");
-
-            taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconNone;
-            taskDialog.MainInstruction = "Are you sure you want to create these sheets?";
-            taskDialog.CommonButtons = TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No;
-
-            string EXviewId = string.Empty; //test
-            string EXviewToAdd = string.Empty; //test
-
-            if (this.cbTitleblocks.Items.Count == 0)
-            {
-                TaskDialog.Show("No Titleblocks Loaded", "Make sure you have a titleblock loaded and selected before continuing.");
-            }
-            else
-            {
-                if (taskDialog.Show() == TaskDialogResult.Yes)
-                {
-                    Transaction trans = new Transaction(revitDoc, "Create Revit Sheets");
-
-                    try
+                    if (!v.IsTemplate)
                     {
-                        
-                        #region SELECTS SPECIFIC TITLEBLOCK AND VIEW FROM DOCUMENT
-
-                        var query = from element in titleblockCollector where element.Name == this.titleBlockName select element;
-                        List<Element> titleblockList = query.ToList();
-                        ElementId titleBlockid = titleblockList[0].Id;
-                        
-                        #endregion
-
-                        #region  READ FROM lstSheetsToCreate AND CREATE SHEETS
-
-                        trans.Start(); //STARTS THE Create Revit Sheets TRANSACTION
-
-                        int rowIndex = 0; //INTEGER TO INCREMENT TO GET THE NEXT FLOOR PLAN NAME FROM lstViewsToAdd
-
-                        foreach (string sheet in lstSheetsToCreate.Items)
+                        if (!lstAvailableViews.Items.Contains(vName) && !viewsToAdd.Contains(vName) && !usedViewNames.Contains(vName))
                         {
-                            char[] separator = new char[] { ':' };
-                            string[] values = sheet.Split(separator, StringSplitOptions.None);
-
-                            string viewToAdd = string.Empty;
-                            viewToAdd = this.lstViewsToAdd.Items[rowIndex].ToString(); //SELECT A SPECIFIC VIEW
-                            EXviewToAdd = viewToAdd; //test    
-
-                            if (viewToAdd != string.Empty) //IF THERE IS A VIEW ASSIGNED TO A SHEET THEN CREATE A VIEWPORT
-                            {
-
-                                ViewSheet vsSheet = ViewSheet.Create(revitDoc, titleBlockid); //CREATES A NEW SHEET
-
-                                vsSheet.SheetNumber = values[0]; //SETS THE SHEET NUMBER
-                                vsSheet.Name = values[1]; //SETS THE SHEET NAME
-
-                                ElementId viewId = null;
-                                viewId = viewDictionary[viewToAdd];
-                                EXviewId = viewId.ToString(); //test
-
-                                //GETS THE CENTER OF THE SCREEN TO ADD THE VIEW
-                                UV location = new UV((vsSheet.Outline.Max.U - vsSheet.Outline.Min.U) / 2, (vsSheet.Outline.Max.V - vsSheet.Outline.Min.V) / 2);
-
-                                Viewport.Create(revitDoc, vsSheet.Id, viewId, new XYZ(location.U, location.V, 0)); //PLACES THE VIEW ONTO THE SHEET
-
-                            }
-                            else //IF THERE IS NOT A VIEW ASSIGNED TO A SHEET THEN JUST CREATE AN EMPTY SHEET
-                            {
-                                ViewSheet vsSheet = ViewSheet.Create(revitDoc, titleBlockid); //CREATES A NEW SHEET
-
-                                vsSheet.SheetNumber = values[0]; //SETS THE SHEET NUMBER
-                                vsSheet.Name = values[1]; //SETS THE SHEET NAME
-
-                            }
-
-                            rowIndex += 1; //ADDS 1 TO ROWINDEX TO GET THE NEXT FLOOR PLAN NAME FROM lstViewsToAdd
-                            
+                            this.lstAvailableViews.Items.Add(vName); //FILLS LISTBOX WITH ALL THE AVAILABLE VIEWS IN THE DOCUMENT BASED ON SELECTED VIEW TYPE
                         }
-
-                        trans.Commit();
-                        this.Close();
-                        
-                        #endregion
-                    }
-                    catch (Exception ex)
-                    {
-                        TaskDialog errorMessage = new TaskDialog("Create Sheet Error");
-                        errorMessage.MainInstruction = "An error occurrued while creating sheets." + Environment.NewLine + "Please read the following error message below";
-                        errorMessage.MainContent = ex.Message + Environment.NewLine + "viewId: " + EXviewId + Environment.NewLine + "View Name: " + EXviewToAdd;
-                        errorMessage.Show();
-
-                        trans.Dispose();
                     }
                 }
             }
         }
-
+        
         private void cbViews_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -603,22 +350,10 @@ namespace CreateRevitSheets
                 case "Floor Plans":
                     lstAvailableViews.Items.Clear();
                     this.GetAllAvailableViewsAndFill_lstAvailableViews(viewList, ViewType.FloorPlan); //FILLS LISTBOX WITH ALL THE FLOOR PLANS IN THE DOCUMENT  
-
-                    //REMOVES REVIT DEFAULT VIEWS THAT DON'T ACTUALLY EXIST IN THE PROJECT
-                    this.lstAvailableViews.Items.Remove("Architectural Plan");
-                    this.lstAvailableViews.Items.Remove("Electrical Plan");
-                    this.lstAvailableViews.Items.Remove("Mechanical Plan");
-                    this.lstAvailableViews.Items.Remove("Plumbing Plan");
                     break;
                 case "Ceiling Plans":
                     lstAvailableViews.Items.Clear();
                     this.GetAllAvailableViewsAndFill_lstAvailableViews(viewList, ViewType.CeilingPlan); //FILLS LISTBOX WITH ALL THE LEGENDS IN THE DOCUMENT  
-
-                    //REMOVES REVIT DEFAULT VIEWS THAT DON'T ACTUALLY EXIST IN THE PROJECT
-                    this.lstAvailableViews.Items.Remove("Architectural Reflected Ceiling Plan");
-                    this.lstAvailableViews.Items.Remove("Electrical Ceiling");
-                    this.lstAvailableViews.Items.Remove("Mechanical Ceiling");
-                    this.lstAvailableViews.Items.Remove("Plumbing Ceiling");
                     break;
                 case "Drafting Views":
                     lstAvailableViews.Items.Clear();
@@ -631,12 +366,6 @@ namespace CreateRevitSheets
                 case "Sections":
                     lstAvailableViews.Items.Clear();
                     this.GetAllAvailableViewsAndFill_lstAvailableViews(viewList, ViewType.Section); //FILLS LISTBOX WITH ALL THE SECTIONS IN THE DOCUMENT  
-
-                    //REMOVES REVIT DEFAULT VIEWS THAT DON'T ACTUALLY EXIST IN THE PROJECT
-                    this.lstAvailableViews.Items.Remove("Architectural Section");
-                    this.lstAvailableViews.Items.Remove("Electrical Section");
-                    this.lstAvailableViews.Items.Remove("Mechanical Section");
-                    this.lstAvailableViews.Items.Remove("Plumbing Section");
                     break;
                 case "Elevations":
                     lstAvailableViews.Items.Clear();
@@ -646,8 +375,234 @@ namespace CreateRevitSheets
                     break;
             }            
         }
+        
+        #region BUTTON EVENTS
+
+        private void btnBrowse_Click(object sender, EventArgs e)
+        {
+            //ALLOW THE USER TO SELECT A SHEET LIST FILE.
+            OpenFileDialog ofd = new OpenFileDialog();
+
+            string libraryPath = string.Empty;
+            libraryPath = "c:\\"; //DEFAULT PATH
+            ofd.InitialDirectory = libraryPath;
+
+            ofd.Filter = "CSV (Comma delimited) (.csv) Files (*.csv)|*.csv";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = null;
+                fileName = ofd.FileName;
+                txtFilename.Text = fileName;
+
+                TaskDialog tdConfirmSheetLoad = new TaskDialog("Load Sheets");
+                tdConfirmSheetLoad.MainInstruction = "Are you sure you want to load sheets from " + fileName + "?";
+                tdConfirmSheetLoad.MainContent = "If you have already created sheets using 'Add Sheet', these will be overwritten.";
+                tdConfirmSheetLoad.CommonButtons = TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No;
+
+                if (tdConfirmSheetLoad.Show() == TaskDialogResult.Yes)
+                {
+                    this.GetAllSheetsToCreateFromCSV(fileName); //FILLS THE LISTBOX WITH THE SHEETS YOU WANT TO CREATE
+                }
+            }
+
+        }
+
+        private void btnCreate_Click(object sender, EventArgs e)
+        {
+            CreateSheets(); //MAIN FUNCTION THAT CREATES SHEETS AND ASSIGNS VIEW TO SHEETS
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
 
         private void btnAddSheet_Click(object sender, EventArgs e)
+        {
+            AddSheet();
+        }
+
+        private void btnRemoveSheet_Click(object sender, EventArgs e)
+        {
+            RemoveSheet();
+        }
+
+        private void btnEditSheet_Click(object sender, EventArgs e)
+        {
+            EditSheet();
+        }
+
+        private void btnAddView_Click(object sender, EventArgs e)
+        {
+            AddView();
+        }
+
+        private void btnRemoveView_Click(object sender, EventArgs e)
+        {
+            RemoveView();
+        }
+
+        private void cxmnuAddSheet_Click(object sender, EventArgs e)
+        {
+            AddSheet();
+        }
+
+        private void cxmnuEditSheet_Click(object sender, EventArgs e)
+        {
+            EditSheet();
+        }
+
+        private void cxmnuRemoveSheet_Click(object sender, EventArgs e)
+        {
+            RemoveSheet();
+        }
+
+        private void cxmnuAddView_Click(object sender, EventArgs e)
+        {
+            AddView();
+        }
+
+        private void cxmnuRemoveView_Click(object sender, EventArgs e)
+        {
+            RemoveView();
+        }
+
+        private void MainForm_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            string helpFile = string.Empty;
+            helpFile = @"C:\Users\" + Environment.UserName + @"\Documents\CRMRevitTools\v2015\CRMRevitTools_Help\create_revit_sheets.html";
+
+            if (File.Exists(helpFile))
+            {
+                Process.Start(helpFile);
+            }
+            else
+            {
+                TaskDialog taskDialog = new TaskDialog("Create Sheets");
+
+                taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconNone;
+                taskDialog.MainInstruction = "The Help file for Create Sheets could not be found. It may have been moved or deleted.";
+                taskDialog.Show();
+            }
+
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+
+            try
+            {
+                LoadTitleblock();
+            }
+            catch (Exception ex)
+            {
+
+                TaskDialog.Show("Error", ex.Message + "\n\n" + ex.Source);
+            }
+
+        }
+
+        #endregion
+
+        #region HELPER VOIDS
+
+        private void CreateSheets()
+        {
+            TaskDialog taskDialog = new TaskDialog("Create Sheets");
+
+            taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconNone;
+            taskDialog.MainInstruction = "Are you sure you want to create these sheets?";
+            taskDialog.CommonButtons = TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No;
+
+            string EXviewId = string.Empty;
+            string EXviewToAdd = string.Empty;
+
+            if (this.cbTitleblocks.Items.Count == 0)
+            {
+                TaskDialog.Show("No Titleblocks Loaded", "Make sure you have a titleblock loaded and selected before continuing.");
+            }
+            else
+            {
+                if (taskDialog.Show() == TaskDialogResult.Yes)
+                {
+                    Transaction trans = new Transaction(revitDoc, "Create Sheets");
+
+                    try
+                    {
+
+                        #region SELECTS SPECIFIC TITLEBLOCK AND VIEW FROM DOCUMENT
+
+                        var query = from element in titleblockCollector where element.Name == this.titleBlockName select element;
+                        List<Element> titleblockList = query.ToList<Element>();
+                        ElementId titleBlockid = titleblockList[0].Id;
+
+                        #endregion
+
+                        #region  READ FROM lstSheetsToCreate AND CREATE SHEETS
+
+                        trans.Start(); //STARTS THE Create Sheets TRANSACTION
+
+                        foreach (DataGridViewRow row in dgvSheetToCreate.Rows)
+                        {
+                            string sheet = string.Empty;
+                            sheet = Convert.ToString(row.Cells["Sheet"].Value);
+
+                            char[] separator = new char[] { ':' };
+                            string[] values = sheet.Split(separator, StringSplitOptions.None);
+
+                            string viewToAdd = string.Empty;
+                            viewToAdd = Convert.ToString(row.Cells["View"].Value); //SELECT A SPECIFIC VIEW
+                            EXviewToAdd = viewToAdd;
+
+                            if (viewToAdd != string.Empty) //IF THERE IS A VIEW ASSIGNED TO A SHEET THEN CREATE A VIEWPORT
+                            {
+
+                                ViewSheet vsSheet = ViewSheet.Create(revitDoc, titleBlockid); //CREATES A NEW SHEET
+
+                                vsSheet.SheetNumber = values[0]; //SETS THE SHEET NUMBER
+                                vsSheet.Name = values[1]; //SETS THE SHEET NAME
+
+                                ElementId viewId = null;
+                                viewId = viewDictionary[viewToAdd];
+                                EXviewId = viewId.ToString();
+
+                                //GETS THE CENTER OF THE SCREEN TO ADD THE VIEW
+                                UV location = new UV((vsSheet.Outline.Max.U - vsSheet.Outline.Min.U) / 2, (vsSheet.Outline.Max.V - vsSheet.Outline.Min.V) / 2);
+
+                                Viewport.Create(revitDoc, vsSheet.Id, viewId, new XYZ(location.U, location.V, 0)); //PLACES THE VIEW ONTO THE SHEET
+
+                            }
+                            else //IF THERE IS NOT A VIEW ASSIGNED TO A SHEET THEN JUST CREATE AN EMPTY SHEET
+                            {
+                                ViewSheet vsSheet = ViewSheet.Create(revitDoc, titleBlockid); //CREATES A NEW SHEET
+
+                                vsSheet.SheetNumber = values[0]; //SETS THE SHEET NUMBER
+                                vsSheet.Name = values[1]; //SETS THE SHEET NAME
+
+                            }
+
+                        }
+
+                        trans.Commit();
+                        this.Close();
+
+                        #endregion
+                    }
+                    catch (Exception ex)
+                    {
+                        TaskDialog errorMessage = new TaskDialog("Create Sheet Error");
+                        errorMessage.MainInstruction = "An error occurrued while creating sheets." + Environment.NewLine + "Please read the following error message below";
+                        errorMessage.MainContent = ex.Message + Environment.NewLine + "viewId: " + EXviewId + Environment.NewLine + "View Name: " + EXviewToAdd;
+                        errorMessage.Show();
+
+                        trans.Dispose();
+                    }
+                }
+            }
+        }
+
+        private void AddSheet()
         {
             frmAddSheet new_frmAddSheet = new frmAddSheet();
 
@@ -665,24 +620,28 @@ namespace CreateRevitSheets
 
                 newEntry = sheetNumber + ":" + sheetName;
 
-                foreach (string sheet in lstSheetsToCreate.Items)
+                foreach (DataGridViewRow row in dgvSheetToCreate.Rows)
                 {
+                    string sheet = string.Empty;
+                    sheet = Convert.ToString(row.Cells["Sheet"].Value);
+
                     char[] separator = new char[] { ':' };
                     string[] values = sheet.Split(separator, StringSplitOptions.None);
+
                     usedAddSheetNumbers.Add(values[0]);
                 }
 
                 if (usedViewSheetNumbers.Contains(sheetNumber))
                 {
-                    TaskDialog taskDialog = new TaskDialog("Create Revit Sheets");
+                    TaskDialog taskDialog = new TaskDialog("Create Sheets");
 
                     taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconNone;
                     taskDialog.MainInstruction = "The sheet number you are trying to create already exists in the project";
                     taskDialog.Show();
                 }
-                else if(usedAddSheetNumbers.Contains(sheetNumber))
+                else if (usedAddSheetNumbers.Contains(sheetNumber))
                 {
-                    TaskDialog taskDialog = new TaskDialog("Create Revit Sheets");
+                    TaskDialog taskDialog = new TaskDialog("Create Sheets");
 
                     taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconNone;
                     taskDialog.MainInstruction = "The sheet number you are trying to create already exists in the list";
@@ -690,63 +649,11 @@ namespace CreateRevitSheets
                 }
                 else
                 {
-                    this.lstSheetsToCreate.Items.Add(newEntry); //ADDS THE NEW SHEET TO THE LIST
+                    this.dgvSheetToCreate.Rows.Add(newEntry, "");
                     usedAddSheetNumbers.Add(sheetNumber);
-                    this.lstViewsToAdd.Items.Add(""); //CREATES A DEFAULT EMPTY SHEET BY ADDING A VIEW NAME OF ""
                 }
 
-                if (cbTitleblocks.SelectedIndex != -1 && lstSheetsToCreate.Items.Count > 0) //CHECKS TO MAKE SURE A TITLEBLOCK IS SELECTED AND THERE IS AT LEAST 1 SHEET TO CREATE
-                {
-                    btnCreate.Enabled = true;
-                }
-                else
-                {
-                    btnCreate.Enabled = false;
-                }
-
-            }
-
-        }
-
-        private void btnRemoveSheet_Click(object sender, EventArgs e)
-        {
-            if (this.lstSheetsToCreate.SelectedItems.Count > 0)
-            {
-
-                //GET CURRENTLY SELECTED INDEX OF SELECTED SHEET
-                int selectedSheetIndex = 0;
-                selectedSheetIndex = lstSheetsToCreate.SelectedIndex;
-
-                string viewToRemove = string.Empty;
-                viewToRemove = lstViewsToAdd.Items[selectedSheetIndex].ToString();
-
-                string sheetToRemove = string.Empty;
-                sheetToRemove = this.lstSheetsToCreate.SelectedItem.ToString();
-
-                TaskDialog tdConfirmRemoveSheet = new TaskDialog("Remove Sheet");
-                tdConfirmRemoveSheet.MainInstruction = "Are you sure you want to remove this sheet?";
-                tdConfirmRemoveSheet.MainContent = sheetToRemove;
-                tdConfirmRemoveSheet.CommonButtons = TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No;
-
-                if (tdConfirmRemoveSheet.Show() == TaskDialogResult.Yes)
-                {
-                    if (viewToRemove != "")
-                    {
-                        //REMOVE THE ASSIGNED VIEW AND ADD IT BACK TO AVAILABLE VIEWS
-                        lstAvailableViews.Items.Add(viewToRemove);
-                        lstViewsToAdd.Items.Remove(viewToRemove);
-                    }
-                    else
-                    {
-                        //IF THE VIEW IS A DEFAULT EMPTY VIEW THEN JUST REMOVE IT
-                        lstViewsToAdd.Items.Remove(viewToRemove);
-                    }
-
-                    //REMOVE THE SHEET
-                    this.lstSheetsToCreate.Items.Remove(sheetToRemove);
-                }
-
-                if (cbTitleblocks.SelectedIndex != -1 && lstSheetsToCreate.Items.Count > 0) //CHECKS TO MAKE SURE A TITLEBLOCK IS SELECTED AND THERE IS AT LEAST 1 SHEET TO CREATE
+                if (cbTitleblocks.SelectedIndex != -1 && dgvSheetToCreate.Rows.Count > 0) //CHECKS TO MAKE SURE A TITLEBLOCK IS SELECTED AND THERE IS AT LEAST 1 SHEET TO CREATE
                 {
                     btnCreate.Enabled = true;
                 }
@@ -758,17 +665,17 @@ namespace CreateRevitSheets
             }
         }
 
-        private void btnEditSheet_Click(object sender, EventArgs e)
+        private void EditSheet()
         {
             frmAddSheet new_frmAddSheet = new frmAddSheet();
             new_frmAddSheet.Text = "Edit Sheet";
 
-            if (this.lstSheetsToCreate.SelectedItems.Count > 0)
-            {   
+            if (dgvSheetToCreate.SelectedRows.Count > 0)
+            {
                 string sheetToEdit = string.Empty;
                 int sheetIndex = 0;
-                sheetToEdit = this.lstSheetsToCreate.SelectedItem.ToString();
-                sheetIndex = this.lstSheetsToCreate.SelectedIndex;
+                sheetIndex = dgvSheetToCreate.CurrentCell.RowIndex;
+                sheetToEdit = Convert.ToString(dgvSheetToCreate.Rows[sheetIndex].Cells["Sheet"].Value);
 
                 string oldSheetNumber = string.Empty;
                 string oldSheetName = string.Empty;
@@ -798,16 +705,20 @@ namespace CreateRevitSheets
 
                     if (newSheetNumber != oldSheetNumber)
                     {
-                        foreach (string sheet in lstSheetsToCreate.Items)
+                        foreach (DataGridViewRow row in dgvSheetToCreate.Rows)
                         {
-                            char[] checkSeparator = new char[] { ':' };
-                            string[] checkValues = sheet.Split(checkSeparator, StringSplitOptions.None);
-                            usedAddSheetNumbers.Add(checkValues[0]);
+                            string sheet = string.Empty;
+                            sheet = Convert.ToString(row.Cells["Sheet"].Value);
+
+                            char[] separator2 = new char[] { ':' };
+                            string[] values2 = sheet.Split(separator, StringSplitOptions.None);
+
+                            usedAddSheetNumbers.Add(values2[0]);
                         }
 
                         if (usedViewSheetNumbers.Contains(newSheetNumber))
                         {
-                            TaskDialog taskDialog = new TaskDialog("Create Revit Sheets");
+                            TaskDialog taskDialog = new TaskDialog("Create Sheets");
 
                             taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconNone;
                             taskDialog.MainInstruction = "The sheet number you are trying to create already exists in the project";
@@ -815,7 +726,7 @@ namespace CreateRevitSheets
                         }
                         else if (usedAddSheetNumbers.Contains(newSheetNumber))
                         {
-                            TaskDialog taskDialog = new TaskDialog("Create Revit Sheets");
+                            TaskDialog taskDialog = new TaskDialog("Create Sheets");
 
                             taskDialog.MainIcon = TaskDialogIcon.TaskDialogIconNone;
                             taskDialog.MainInstruction = "The sheet number you are trying to create already exists in the list";
@@ -823,28 +734,136 @@ namespace CreateRevitSheets
                         }
                         else
                         {
-                            this.lstSheetsToCreate.Items.RemoveAt(sheetIndex);
-                            this.lstSheetsToCreate.Items.Insert(sheetIndex, newEntry);
+                            dgvSheetToCreate.Rows[sheetIndex].Cells["Sheet"].Value = newEntry;
                         }
+                    }
+                    else
+                    {
+                        dgvSheetToCreate.Rows[sheetIndex].Cells["Sheet"].Value = newEntry;
                     }
                 }
             }
         }
 
-        private void lstSheetsToCreate_SelectedIndexChanged(object sender, EventArgs e)
+        private void RemoveSheet()
         {
-            if (lstViewsToAdd.Focused == false)
+            if (this.dgvSheetToCreate.SelectedRows.Count > 0)
             {
-                lstViewsToAdd.ClearSelected();
+
+                //GET CURRENTLY SELECTED INDEX OF SELECTED SHEET
+                int selectedSheetIndex = 0;
+                selectedSheetIndex = dgvSheetToCreate.CurrentCell.RowIndex;
+
+                string viewToRemove = string.Empty;
+                viewToRemove = Convert.ToString(dgvSheetToCreate.Rows[selectedSheetIndex].Cells["View"].Value);
+
+                string sheetToRemove = string.Empty;
+                sheetToRemove = Convert.ToString(dgvSheetToCreate.Rows[selectedSheetIndex].Cells["Sheet"].Value);
+
+                TaskDialog tdConfirmRemoveSheet = new TaskDialog("Remove Sheet");
+                tdConfirmRemoveSheet.MainInstruction = "Are you sure you want to remove this sheet?";
+                tdConfirmRemoveSheet.MainContent = sheetToRemove;
+                tdConfirmRemoveSheet.CommonButtons = TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No;
+
+                if (tdConfirmRemoveSheet.Show() == TaskDialogResult.Yes)
+                {
+                    if (viewToRemove != "")
+                    {
+                        //REMOVE THE ASSIGNED VIEW AND ADD IT BACK TO AVAILABLE VIEWS
+                        lstAvailableViews.Items.Add(viewToRemove);
+                        dgvSheetToCreate.Rows[selectedSheetIndex].Cells["View"].Value = "";
+                    }
+                    else
+                    {
+                        //IF THE VIEW IS A DEFAULT EMPTY VIEW THEN JUST REMOVE IT
+                        dgvSheetToCreate.Rows[selectedSheetIndex].Cells["View"].Value = "";
+                    }
+
+                    //REMOVE THE SHEET
+                    dgvSheetToCreate.Rows.RemoveAt(selectedSheetIndex);
+                }
+
+                if (cbTitleblocks.SelectedIndex != -1 && dgvSheetToCreate.Rows.Count > 0) //CHECKS TO MAKE SURE A TITLEBLOCK IS SELECTED AND THERE IS AT LEAST 1 SHEET TO CREATE
+                {
+                    btnCreate.Enabled = true;
+                }
+                else
+                {
+                    btnCreate.Enabled = false;
+                }
+
             }
         }
 
-        private void lstViewsToAdd_SelectedIndexChanged(object sender, EventArgs e)
+        private void AddView()
         {
-            if (lstSheetsToCreate.Focused == false)
+            if (this.lstAvailableViews.SelectedItems.Count > 0)
             {
-                lstSheetsToCreate.ClearSelected();
+
+                string selectedView = string.Empty;
+                selectedView = lstAvailableViews.SelectedItem.ToString();
+
+                if (dgvSheetToCreate.SelectedRows.Count > 0)
+                {
+                    //GET CURRENTLY SELECTED INDEX OF SELECTED SHEET
+                    int selectedSheetIndex = 0;
+                    selectedSheetIndex = dgvSheetToCreate.CurrentCell.RowIndex;
+
+                    //CHECK IF A SHEET IS SELECTED
+                    if (selectedSheetIndex < 0)
+                    {
+                        TaskDialog.Show("Add View", "Select a sheet that you want to add the view to");
+                    }
+                    else
+                    {
+                        string viewToAdd = string.Empty;
+                        viewToAdd = Convert.ToString(dgvSheetToCreate.Rows[selectedSheetIndex].Cells["View"].Value);
+
+                        if (viewToAdd != "")
+                        {
+                            TaskDialog.Show("Add View", "The selected sheet already has a view assigned to it");
+                        }
+                        else
+                        {
+                            //INSERT VIEW AT CURRENTLY SELECTED SHEET
+                            dgvSheetToCreate.Rows[selectedSheetIndex].Cells["View"].Value = selectedView;
+                            lstAvailableViews.Items.Remove(selectedView);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                return;
             }
         }
+
+        private void RemoveView()
+        {
+            if (this.dgvSheetToCreate.SelectedRows.Count > 0)
+            {
+                //GET CURRENTLY SELECTED INDEX OF SELECTED SHEET
+                int selectedSheetIndex = 0;
+                selectedSheetIndex = dgvSheetToCreate.CurrentCell.RowIndex;
+
+                string selectedView = string.Empty;
+                selectedView = Convert.ToString(dgvSheetToCreate.Rows[selectedSheetIndex].Cells["View"].Value);
+
+                if (selectedView != "")
+                {
+                    dgvSheetToCreate.Rows[selectedSheetIndex].Cells["View"].Value = "";
+                    lstAvailableViews.Items.Add(selectedView);
+                }
+
+            }
+
+            else
+            {
+                return;
+            }
+        }
+
+        #endregion
+
     }
 }

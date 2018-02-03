@@ -41,15 +41,15 @@ namespace CRMTools
 
             string iconsPath = "";
             iconsPath = @"C:\Users\" + Environment.UserName + @"\Documents\CRMRevitTools\" + revitVersion + @"\RevitIcons\";
-            
+
             #region CreateRevitSheets
 
             // Create a push button
-            PushButtonData btnCreateRevitSheets = new PushButtonData("cmdCreateRevitSheets", "Create \nRevit Sheets", commandsPath + "CreateRevitSheets.dll", "CreateRevitSheets.Class1");
-            btnCreateRevitSheets.ToolTip = "Creates sheet views from a .csv file.";
-            btnCreateRevitSheets.LongDescription = "Create large numbers of sheets with the same titleblock. Manually create sheets or load them from a .csv file." +
-                                                   "CSV files can be created with Microsoft Excel. The Sheet Number must be in column A and the Sheet Name must be in Column B. Each sheet should have its own row. " +
-                                                   "Sheet 1 in row 1, sheet 2 in row 2, etc.";
+            PushButtonData btnCreateRevitSheets = new PushButtonData("cmdCreateRevitSheets", " Create \nSheets", commandsPath + "CreateRevitSheets.dll", "CreateRevitSheets.Class1");
+            btnCreateRevitSheets.ToolTip = "Create multiple Sheets at once. Assign Views to Sheets.";
+            btnCreateRevitSheets.LongDescription = "Manually create Sheets or load them from a (.csv) file. " +
+                                                   "CSV files can be created with Microsoft Excel. The Sheet Number must be in Column A and the Sheet Name must be in Column B. Each Sheet should have its own Row. " +
+                                                   "Sheet 1 in Row 1, Sheet 2 in Row 2, etc.";
 
             // create bitmap image for button
             Uri uriLargeImage_CreateRevitSheets = new Uri(iconsPath + @"32x32\cmdRevitSheetsImage_32x32.bmp");
@@ -94,9 +94,9 @@ namespace CRMTools
             #region SheetRenamer
 
             PushButtonData btnSheetRenamer = new PushButtonData("cmdSheetRenamer", "Sheet \nRenamer", commandsPath + "SheetRenamer.dll", "SheetRenamer.Class1");
-            btnSheetRenamer.ToolTip = "Rename all sheets to DPS standard file naming convention.";
-            btnSheetRenamer.LongDescription = "Create a sheet set within Revit and assign the sheets you want to print. Once the sheets are printed, browse to the directory where they are saved. " + 
-                                              "Select the sheet set that you used to print and click OK.\n\n" + 
+            btnSheetRenamer.ToolTip = "Renames all PDF files in a directory to the following naming convention: Project Number-Sheet Number_Current Revision";
+            btnSheetRenamer.LongDescription = "Create a sheet set within Revit and assign the sheets you want to print. Once the sheets are printed, browse to the directory where they are saved. " +
+                                              "Select the sheet set that you used to print and click OK.\n\n" +
                                               "NOTE: Ensure that the Project Number is set within Project Information for proper file naming.";
 
             // create bitmap image for button

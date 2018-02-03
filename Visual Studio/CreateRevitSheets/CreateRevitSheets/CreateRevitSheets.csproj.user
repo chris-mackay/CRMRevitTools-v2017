@@ -7,12 +7,12 @@
     <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <StartAction>Program</StartAction>
-    <StartProgram>C:\Program Files\Autodesk\Revit 2015\Revit.exe</StartProgram>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <StartAction>Project</StartAction>
     <StartProgram>
     </StartProgram>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Program Files\Autodesk\Revit 2015\Revit.exe</StartProgram>
   </PropertyGroup>
 </Project>
