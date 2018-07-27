@@ -43,7 +43,6 @@ namespace CreateRevitSheets
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.cbTitleblocks = new System.Windows.Forms.ComboBox();
@@ -62,20 +61,12 @@ namespace CreateRevitSheets
             this.dgvSheetToCreate = new System.Windows.Forms.DataGridView();
             this.Sheet = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.View = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cxmnuSheets = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.cxmnuAddSheet = new System.Windows.Forms.ToolStripMenuItem();
-            this.cxmnuEditSheet = new System.Windows.Forms.ToolStripMenuItem();
-            this.cxmnuRemoveSheet = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.cxmnuAddView = new System.Windows.Forms.ToolStripMenuItem();
-            this.cxmnuRemoveView = new System.Windows.Forms.ToolStripMenuItem();
             this.btnEditSheet = new System.Windows.Forms.Button();
             this.btnRemoveSheet = new System.Windows.Forms.Button();
             this.cbViewTypes = new System.Windows.Forms.ComboBox();
             this.btnAddSheet = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSheetToCreate)).BeginInit();
-            this.cxmnuSheets.SuspendLayout();
             this.SuspendLayout();
             // 
             // cbTitleblocks
@@ -269,7 +260,6 @@ namespace CreateRevitSheets
             this.dgvSheetToCreate.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Sheet,
             this.View});
-            this.dgvSheetToCreate.ContextMenuStrip = this.cxmnuSheets;
             this.dgvSheetToCreate.GridColor = System.Drawing.SystemColors.ControlLight;
             this.dgvSheetToCreate.Location = new System.Drawing.Point(313, 114);
             this.dgvSheetToCreate.MultiSelect = false;
@@ -281,6 +271,7 @@ namespace CreateRevitSheets
             this.dgvSheetToCreate.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvSheetToCreate.Size = new System.Drawing.Size(335, 314);
             this.dgvSheetToCreate.TabIndex = 16;
+            this.dgvSheetToCreate.MouseUp += new System.Windows.Forms.MouseEventHandler(this.dgvSheetToCreate_MouseUp);
             // 
             // Sheet
             // 
@@ -293,58 +284,6 @@ namespace CreateRevitSheets
             this.View.HeaderText = "View";
             this.View.Name = "View";
             this.View.ReadOnly = true;
-            // 
-            // cxmnuSheets
-            // 
-            this.cxmnuSheets.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cxmnuAddSheet,
-            this.cxmnuEditSheet,
-            this.cxmnuRemoveSheet,
-            this.toolStripSeparator1,
-            this.cxmnuAddView,
-            this.cxmnuRemoveView});
-            this.cxmnuSheets.Name = "cxmnuSheets";
-            this.cxmnuSheets.Size = new System.Drawing.Size(167, 120);
-            // 
-            // cxmnuAddSheet
-            // 
-            this.cxmnuAddSheet.Name = "cxmnuAddSheet";
-            this.cxmnuAddSheet.Size = new System.Drawing.Size(166, 22);
-            this.cxmnuAddSheet.Text = "Add Sheet";
-            this.cxmnuAddSheet.Click += new System.EventHandler(this.cxmnuAddSheet_Click);
-            // 
-            // cxmnuEditSheet
-            // 
-            this.cxmnuEditSheet.Name = "cxmnuEditSheet";
-            this.cxmnuEditSheet.Size = new System.Drawing.Size(166, 22);
-            this.cxmnuEditSheet.Text = "Edit Sheet";
-            this.cxmnuEditSheet.Click += new System.EventHandler(this.cxmnuEditSheet_Click);
-            // 
-            // cxmnuRemoveSheet
-            // 
-            this.cxmnuRemoveSheet.Name = "cxmnuRemoveSheet";
-            this.cxmnuRemoveSheet.Size = new System.Drawing.Size(166, 22);
-            this.cxmnuRemoveSheet.Text = "Remove Sheet";
-            this.cxmnuRemoveSheet.Click += new System.EventHandler(this.cxmnuRemoveSheet_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(163, 6);
-            // 
-            // cxmnuAddView
-            // 
-            this.cxmnuAddView.Name = "cxmnuAddView";
-            this.cxmnuAddView.Size = new System.Drawing.Size(166, 22);
-            this.cxmnuAddView.Text = "Add View -->";
-            this.cxmnuAddView.Click += new System.EventHandler(this.cxmnuAddView_Click);
-            // 
-            // cxmnuRemoveView
-            // 
-            this.cxmnuRemoveView.Name = "cxmnuRemoveView";
-            this.cxmnuRemoveView.Size = new System.Drawing.Size(166, 22);
-            this.cxmnuRemoveView.Text = "<-- Remove View";
-            this.cxmnuRemoveView.Click += new System.EventHandler(this.cxmnuRemoveView_Click);
             // 
             // btnEditSheet
             // 
@@ -422,7 +361,6 @@ namespace CreateRevitSheets
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSheetToCreate)).EndInit();
-            this.cxmnuSheets.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -449,12 +387,5 @@ namespace CreateRevitSheets
         private System.Windows.Forms.DataGridView dgvSheetToCreate;
         private System.Windows.Forms.DataGridViewTextBoxColumn Sheet;
         private System.Windows.Forms.DataGridViewTextBoxColumn View;
-        private System.Windows.Forms.ContextMenuStrip cxmnuSheets;
-        private System.Windows.Forms.ToolStripMenuItem cxmnuAddSheet;
-        private System.Windows.Forms.ToolStripMenuItem cxmnuEditSheet;
-        private System.Windows.Forms.ToolStripMenuItem cxmnuRemoveSheet;
-        private System.Windows.Forms.ToolStripMenuItem cxmnuRemoveView;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem cxmnuAddView;
     }
 }

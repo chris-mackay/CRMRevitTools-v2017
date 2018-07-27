@@ -49,7 +49,6 @@ C:\Revit Programming\CRMRevitTools-v2015\Visual Studio\CreateRevitSheets\CreateR
 C:\Revit Programming\CRMRevitTools-v2015\Visual Studio\CreateRevitSheets\CreateRevitSheets\obj\x64\Release\CreateRevitSheets.pdb
 C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\CreateRevitSheets\CreateRevitSheets\bin\x64\Release\CreateRevitSheets.dll
 C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\CreateRevitSheets\CreateRevitSheets\bin\x64\Release\CreateRevitSheets.pdb
-C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\CreateRevitSheets\CreateRevitSheets\obj\x64\Release\CreateRevitSheets.csprojResolveAssemblyReference.cache
 C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\CreateRevitSheets\CreateRevitSheets\obj\x64\Release\CreateRevitSheets.frmAddSheet.resources
 C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\CreateRevitSheets\CreateRevitSheets\obj\x64\Release\CreateRevitSheets.MainForm.resources
 C:\Revit Programming\CRMRevitTools-v2017\Visual Studio\CreateRevitSheets\CreateRevitSheets\obj\x64\Release\CreateRevitSheets.csproj.GenerateResource.Cache
