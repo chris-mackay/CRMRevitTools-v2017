@@ -76,7 +76,7 @@ namespace CRMTools
                                                         "Column C: Data Type (e.g. Number, Integer, Text, YesNo)\n" +
                                                         "Column D: Binding Type (e.g. Instance, Type)\n" +
                                                         "Column E: Parameter Name (User Determined)\n\n" +
-                                                        "Parameters are grouped under Data in Properties";
+                                                        "Parameters are grouped under Data in Properties if Insert into Project Parameters is selected";
 
             // create bitmap image for button
             Uri uriLargeImage_SharedParameterCreator = new Uri(iconsPath + @"32x32\cmdSharedParameterCreator_32x32.bmp");
@@ -111,6 +111,30 @@ namespace CRMTools
             btnSheetRenamer.Image = smallImage_SheetRenamer;
 
             #endregion
+
+            #region ProjectParameters
+
+            PushButtonData btnProjectParameters = new PushButtonData("cmdProjectParameters", "Insert into \nProject Parameters", commandsPath + "ProjectParameters.dll", "ProjectParameters.Class1");
+            btnProjectParameters.ToolTip = "Insert Shared Parameters into Project Parameters";
+            btnProjectParameters.LongDescription = "1) Make sure a Shared Parameter file is loaded in Manage->Shared Parameters\n" +
+                                                   "2) Click Load to fill the view with the Shared Parameters from the file\n" +
+                                                   "3) Right click to set the Binding type (e.g. Instance or Type). This value must be set before selecting a Category.\n" +
+                                                   "4) Right click to set the element Category (e.g. Mechanical Equipment, Walls, etc.)\n" + 
+                                                   "5) Right click to set the Properties Group. This is the category it will be grouped under in the Properties window.\n" +
+                                                   "6) Click Insert to insert the Shared Parameters into Project Parameters";
+
+            // create bitmap image for button
+            Uri uriLargeImage_ProjectParameters = new Uri(iconsPath + @"32x32\cmdProjectParameters_32x32.bmp");
+            BitmapImage largeImage_ProjectParameters = new BitmapImage(uriLargeImage_ProjectParameters);
+
+            // create bitmap image for button
+            Uri uriSmallImage_ProjectParameters = new Uri(iconsPath + @"16x16\cmdProjectParameters_16x16.bmp");
+            BitmapImage smallImage_ProjectParameters = new BitmapImage(uriSmallImage_ProjectParameters);
+
+            btnProjectParameters.LargeImage = largeImage_ProjectParameters;
+            btnProjectParameters.Image = smallImage_ProjectParameters;
+
+            #endregion
             
             #region ProductionPanelItems
 
@@ -122,6 +146,7 @@ namespace CRMTools
             productionButtons.Add(pnlProductionPanel.AddItem(btnCreateRevitSheets));
             productionButtons.Add(pnlProductionPanel.AddItem(btnSharedParameterCreator));
             productionButtons.Add(pnlProductionPanel.AddItem(btnSheetRenamer));
+            productionButtons.Add(pnlProductionPanel.AddItem(btnProjectParameters));
 
             #endregion
 

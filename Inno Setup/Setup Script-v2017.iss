@@ -1,6 +1,6 @@
 #define MyAppName "CRMRevitTools-v2017"
-#define MyAppVersion "1.0.3"
-#define MyVersionInfoVersion "1.0.3"
+#define MyAppVersion "1.0.4"
+#define MyVersionInfoVersion "1.0.4"
 #define MyAppPublisher "Christopher Ryan Mackay"
 
 [Setup]
@@ -28,7 +28,6 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Source: "CRMRevitTools\Commands\*"; DestDir: "{userdocs}\CRMRevitTools\v2017\Commands"; Flags: ignoreversion
 Source: "CRMRevitTools\MenuCreator\*"; DestDir: "{userdocs}\CRMRevitTools\v2017\MenuCreator"; Flags: ignoreversion
 Source: "CRMRevitTools\RevitIcons\16x16\*"; DestDir: "{userdocs}\CRMRevitTools\v2017\RevitIcons\16x16\"; Flags: ignoreversion
-Source: "CRMRevitTools\RevitIcons\32x32\*"; DestDir: "{userdocs}\CRMRevitTools\v2017\RevitIcons\32x32\"; Flags: ignoreversion
 Source: "CRMRevitTools\RevitIcons\32x32\*"; DestDir: "{userdocs}\CRMRevitTools\v2017\RevitIcons\32x32\"; Flags: ignoreversion
 Source: "CRMRevitTools\Addin File\*"; DestDir: "C:\ProgramData\Autodesk\Revit\Addins\2017"; Flags: ignoreversion
 Source: "CRMRevitToolsInit-v2017.exe"; DestDir: "{userdocs}\CRMRevitTools\v2017"; Flags: ignoreversion
