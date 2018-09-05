@@ -162,6 +162,32 @@ namespace ProjectParameters
             return mnu;
         }
         
+        private List<string> ProjectParameterList()
+        {
+            List<string> projectParameters = new List<string>();
+
+            BindingMap bindingMap;
+            bindingMap = myRevitDoc.ParameterBindings;
+
+            if (!bindingMap.IsEmpty)
+            {
+                DefinitionBindingMapIterator iterator;
+                iterator = bindingMap.ForwardIterator();
+                iterator.Reset();
+
+                while (iterator.MoveNext())
+                {
+                    string paramName = "";
+                    paramName = iterator.Key.Name;
+
+                    projectParameters.Add(paramName);
+                }
+
+            }
+
+            return projectParameters;
+        }
+
         private List<string> TypeCategories()
         {
             List<string> list = new List<string>();
@@ -737,19 +763,33 @@ namespace ProjectParameters
         {
             dgvSharedParameters.Rows.Clear();
 
-            List<string> paramList = SharedParameterList();
+            List<string> sharedParamList = SharedParameterList();
+            List<string> projectParamList = ProjectParameterList();
 
-            foreach (string item in paramList)
+            foreach (string item in sharedParamList)
             {
                 char[] chrSeparator = new char[] { '\t' };
                 string[] arrValues = item.Split(chrSeparator, StringSplitOptions.None);
 
                 string paramName = arrValues[0];
-                string guid = arrValues[1];
                 string paramGroup = arrValues[2];
 
-                dgvSharedParameters.Rows.Add(paramName, guid, paramGroup, "", "", "");
+                dgvSharedParameters.Rows.Add(paramName, paramGroup, "", "", "");
+                
             }
+
+            foreach (DataGridViewRow row in dgvSharedParameters.Rows)
+            {
+                string sharedParam = "";
+
+                sharedParam = row.Cells["clmParamName"].Value.ToString();
+
+                if (projectParamList.Contains(sharedParam))
+                {
+                    row.DefaultCellStyle.BackColor = System.Drawing.Color.Red;
+                }
+            }
+
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

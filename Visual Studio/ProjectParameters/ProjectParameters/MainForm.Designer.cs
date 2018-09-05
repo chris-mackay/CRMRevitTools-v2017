@@ -48,17 +48,16 @@ namespace ProjectParameters
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.btnInsert = new System.Windows.Forms.Button();
             this.dgvSharedParameters = new System.Windows.Forms.DataGridView();
-            this.clmParamName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.clmGuid = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.clmGroup = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.clmBinding = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.clmCategory = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.clmPropertiesGroup = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblSharedParameterFile = new System.Windows.Forms.Label();
             this.txtSharedParameterFile = new System.Windows.Forms.TextBox();
             this.btnLoad = new System.Windows.Forms.Button();
             this.lblInstructions = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.clmParamName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.clmGroup = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.clmBinding = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.clmCategory = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.clmPropertiesGroup = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSharedParameters)).BeginInit();
             this.SuspendLayout();
             // 
@@ -97,7 +96,6 @@ namespace ProjectParameters
             this.dgvSharedParameters.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvSharedParameters.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.clmParamName,
-            this.clmGuid,
             this.clmGroup,
             this.clmBinding,
             this.clmCategory,
@@ -113,42 +111,6 @@ namespace ProjectParameters
             this.dgvSharedParameters.Size = new System.Drawing.Size(835, 522);
             this.dgvSharedParameters.TabIndex = 17;
             this.dgvSharedParameters.MouseUp += new System.Windows.Forms.MouseEventHandler(this.dgvSharedParameters_MouseUp);
-            // 
-            // clmParamName
-            // 
-            this.clmParamName.HeaderText = "Parameter Name";
-            this.clmParamName.Name = "clmParamName";
-            this.clmParamName.ReadOnly = true;
-            // 
-            // clmGuid
-            // 
-            this.clmGuid.HeaderText = "Guid";
-            this.clmGuid.Name = "clmGuid";
-            this.clmGuid.ReadOnly = true;
-            // 
-            // clmGroup
-            // 
-            this.clmGroup.HeaderText = "Parameter Group";
-            this.clmGroup.Name = "clmGroup";
-            this.clmGroup.ReadOnly = true;
-            // 
-            // clmBinding
-            // 
-            this.clmBinding.HeaderText = "Binding";
-            this.clmBinding.Name = "clmBinding";
-            this.clmBinding.ReadOnly = true;
-            // 
-            // clmCategory
-            // 
-            this.clmCategory.HeaderText = "Category";
-            this.clmCategory.Name = "clmCategory";
-            this.clmCategory.ReadOnly = true;
-            // 
-            // clmPropertiesGroup
-            // 
-            this.clmPropertiesGroup.HeaderText = "Properties Group";
-            this.clmPropertiesGroup.Name = "clmPropertiesGroup";
-            this.clmPropertiesGroup.ReadOnly = true;
             // 
             // lblSharedParameterFile
             // 
@@ -208,6 +170,36 @@ namespace ProjectParameters
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // clmParamName
+            // 
+            this.clmParamName.HeaderText = "Parameter Name";
+            this.clmParamName.Name = "clmParamName";
+            this.clmParamName.ReadOnly = true;
+            // 
+            // clmGroup
+            // 
+            this.clmGroup.HeaderText = "Parameter Group";
+            this.clmGroup.Name = "clmGroup";
+            this.clmGroup.ReadOnly = true;
+            // 
+            // clmBinding
+            // 
+            this.clmBinding.HeaderText = "Binding";
+            this.clmBinding.Name = "clmBinding";
+            this.clmBinding.ReadOnly = true;
+            // 
+            // clmCategory
+            // 
+            this.clmCategory.HeaderText = "Category";
+            this.clmCategory.Name = "clmCategory";
+            this.clmCategory.ReadOnly = true;
+            // 
+            // clmPropertiesGroup
+            // 
+            this.clmPropertiesGroup.HeaderText = "Properties Group";
+            this.clmPropertiesGroup.Name = "clmPropertiesGroup";
+            this.clmPropertiesGroup.ReadOnly = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -244,7 +236,6 @@ namespace ProjectParameters
         private System.Windows.Forms.Label lblInstructions;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.DataGridViewTextBoxColumn clmParamName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn clmGuid;
         private System.Windows.Forms.DataGridViewTextBoxColumn clmGroup;
         private System.Windows.Forms.DataGridViewTextBoxColumn clmBinding;
         private System.Windows.Forms.DataGridViewTextBoxColumn clmCategory;
